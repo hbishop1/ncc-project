@@ -1,6 +1,7 @@
 from __future__ import print_function
 import torch
 from torch import nn, optim
+import torch.nn.functional as F
 import numpy as np
 from torch.autograd import Variable
 import matplotlib.pyplot as plt
@@ -8,7 +9,7 @@ import time
 import torchvision
 from torchvision import transforms, datasets, models
 
-def train_model(model, criterion, optimizer, scheduler, num_epochs):
+def train_model(model, optimizer, scheduler, num_epochs):
     since = time.time()
 
     best_model_wts = model.state_dict()
@@ -42,7 +43,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs):
 
                 outputs = model(inputs)
                 _, preds = torch.max(outputs.data, 1)
-                loss = criterion(nn.Softmax(outputs),labels)
+                loss = F.nll_loss(outputs,labels)
 
                 if phase == 'train':
                     loss.backward()
@@ -50,7 +51,6 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs):
 
                 running_loss += loss.data
                 running_corrects += torch.sum(preds == labels.data)
-                print(running_corrects)
 
 
             epoch_loss = running_loss / len(dataloaders[i].dataset)
@@ -61,8 +61,6 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs):
             if phase == 'valid' and epoch_acc > best_acc:
                 best_acc = epoch_acc
                 best_model_wts = model.state_dict()
-
-        print()
 
     time_elapsed = time.time() - since
     print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
@@ -96,11 +94,10 @@ if __name__ == '__main__':
     if torch.cuda.is_available():
         model_ft = model_ft.cuda()
 
-    criterion = nn.NLLLoss()
     optimizer_ft = optim.SGD(model_ft.parameters(),lr = learning_rate,momentum = 0.9)
     exp_lr_scheduler = optim.lr_scheduler.StepLR(optimizer_ft, step_size = 7, gamma = 0.1)
 
-    train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler, training_iterations)
+    train_model(model_ft, optimizer_ft, exp_lr_scheduler, training_iterations)
 
 def imshow(inp):
     inp = inp.numpy().transpose((1,2,0))
