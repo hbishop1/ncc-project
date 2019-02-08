@@ -1,0 +1,6 @@
+# requirements for the project
+
+numpy
+matplotlib
+torch
+torchvision
