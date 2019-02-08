@@ -34,7 +34,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs):
 
                 if torch.cuda.is_available():
                     inputs = Variable(inputs.cuda())
-                    labels = Variable(inputs.cuda())
+                    labels = Variable(labels.cuda())
                 else:
                     inputs,labels = Variable(inputs),Variable(labels)
 
@@ -85,8 +85,8 @@ if __name__ == '__main__':
     valid = datasets.ImageFolder('./dataset_fine-grained/valid/',simple_transforms)
 
 
-    train_data_gen = torch.utils.data.DataLoader(train,batch_size = 8,num_workers=1)
-    valid_data_gen = torch.utils.data.DataLoader(valid,batch_size = 8,num_workers=1)
+    train_data_gen = torch.utils.data.DataLoader(train,batch_size = 32,num_workers=1)
+    valid_data_gen = torch.utils.data.DataLoader(valid,batch_size = 32,num_workers=1)
     dataloaders = [train_data_gen,valid_data_gen]
 
     model_ft = models.resnet18(pretrained=True)
@@ -96,7 +96,7 @@ if __name__ == '__main__':
     if torch.cuda.is_available():
         model_ft = model_ft.cuda()
 
-    criterion = nn.CrossEntropyLoss()
+    criterion = nn.NLLLoss()
     optimizer_ft = optim.SGD(model_ft.parameters(),lr = learning_rate,momentum = 0.9)
     exp_lr_scheduler = optim.lr_scheduler.StepLR(optimizer_ft, step_size = 7, gamma = 0.1)
 
