@@ -42,7 +42,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs):
 
                 outputs = model(inputs)
                 _, preds = torch.max(outputs.data, 1)
-                loss = criterion(outputs,labels)
+                loss = criterion(nn.Softmax(outputs),labels)
 
                 if phase == 'train':
                     loss.backward()
@@ -50,7 +50,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs):
 
                 running_loss += loss.data
                 running_corrects += torch.sum(preds == labels.data)
-                
+                print(running_corrects)
 
 
             epoch_loss = running_loss / len(dataloaders[i].dataset)
