@@ -15,6 +15,8 @@ def train_model(model, optimizer, scheduler, num_epochs):
     best_model_wts = model.state_dict()
     best_acc = 0.0
 
+    softmax = nn.LogSoftmax(dim=1)
+
     for epoch in range(num_epochs):
         print('Epoch {}/{}'.format(epoch,num_epochs - 1))
         print('-' * 10)
@@ -43,15 +45,14 @@ def train_model(model, optimizer, scheduler, num_epochs):
 
                 outputs = model(inputs)
                 _, preds = torch.max(outputs.data, 1)
-                loss = F.nll_loss(outputs,labels)
+                loss = F.nll_loss(softmax(outputs),labels)
 
                 if phase == 'train':
                     loss.backward()
                     optimizer.step()
 
                 running_loss += loss.data
-                running_corrects += torch.sum(preds == labels.data)
-
+                running_corrects += torch.sum(preds == labels.data).float()
 
             epoch_loss = running_loss / len(dataloaders[i].dataset)
             epoch_acc = running_corrects / len(dataloaders[i].dataset)
