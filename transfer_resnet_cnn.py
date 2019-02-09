@@ -73,7 +73,7 @@ def train_model(model, optimizer, scheduler, num_epochs):
 
 if __name__ == '__main__':
 
-    learning_rate = 0.00005
+    learning_rate = 0.0001
     training_iterations = 50
 
     simple_transforms = transforms.Compose([transforms.Resize((224,224)),
