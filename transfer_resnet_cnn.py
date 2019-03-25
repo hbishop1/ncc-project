@@ -95,7 +95,7 @@ if __name__ == '__main__':
     if torch.cuda.is_available():
         model_ft = model_ft.cuda()
 
-    optimizer_ft = optim.SGD(model_ft.parameters(),lr = learning_rate,momentum = 0.9)
+    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate, weight_decay = 0.05)
     exp_lr_scheduler = optim.lr_scheduler.StepLR(optimizer_ft, step_size = 7, gamma = 0.1)
 
     train_model(model_ft, optimizer_ft, exp_lr_scheduler, training_iterations)
