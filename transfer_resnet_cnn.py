@@ -30,7 +30,7 @@ def train_model(model, optimiser, num_epochs):
         model.train()
 
         # iterate over some of the train dateset
-        for i in range(50):
+        for i in range(1000):
             x,t = next(train_iterator)
             x,t = x.to(device), t.to(device)
 
@@ -129,7 +129,7 @@ if __name__ == '__main__':
 
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
-    learning_rate = 0.05
+    learning_rate = 0.01
     training_iterations = 50
 
     simple_transforms = transforms.Compose([transforms.Resize((224,224)),
