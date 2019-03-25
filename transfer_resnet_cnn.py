@@ -9,7 +9,13 @@ import time
 import torchvision
 from torchvision import transforms, datasets, models
 
-def train_model(model, optimizer, num_epochs):
+def cycle(iterable):
+        while True:
+            for x in iterable:
+                yield x
+
+def train_model(model, optimiser, num_epochs):
+
     for epoch in range(1,num_epochs+1):
 
         print('-' * 10)
@@ -41,7 +47,7 @@ def train_model(model, optimizer, num_epochs):
         model.eval()
 
         # iterate entire test dataset
-        for x,t in test_loader:
+        for x,t in valid_data_gen:
             x,t = x.to(device), t.to(device)
 
             p = model(x)
@@ -121,6 +127,8 @@ def train_model(model, optimizer, num_epochs):
 
 if __name__ == '__main__':
 
+    device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+
     learning_rate = 0.002
     training_iterations = 50
 
@@ -136,6 +144,9 @@ if __name__ == '__main__':
     valid_data_gen = torch.utils.data.DataLoader(valid,batch_size = 32,num_workers=1)
     dataloaders = [train_data_gen,valid_data_gen]
 
+    train_iterator = iter(cycle(train_data_gen))
+    valid_iterator = iter(cycle(valid_data_gen))
+
     model_ft = models.resnet18(pretrained=True)
     num_ftrs = model_ft.fc.in_features
     model_ft.fc = nn.Linear(num_ftrs,len(train.classes))
@@ -143,9 +154,9 @@ if __name__ == '__main__':
     if torch.cuda.is_available():
         model_ft = model_ft.cuda()
 
-    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate, weight_decay = 0.05)
+    optimiser_ft = optim.Adam(model_ft.parameters(),lr = learning_rate, weight_decay = 0.05)
 
-    train_model(model_ft, optimizer_ft, training_iterations)
+    train_model(model_ft, optimiser_ft, training_iterations)
 
 def imshow(inp):
     inp = inp.numpy().transpose((1,2,0))
