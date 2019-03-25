@@ -96,7 +96,7 @@ if __name__ == '__main__':
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]),
     'valid': transforms.Compose([
-        transforms.Resize(224),
+        transforms.Resize((224,224)),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]),
@@ -121,6 +121,7 @@ if __name__ == '__main__':
     model_ft.fc = nn.Linear(num_ftrs,len(class_names))
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
     
     model_ft = model_ft.to(device)
 
