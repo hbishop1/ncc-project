@@ -31,8 +31,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
         print('-' * 10)
 
         # Each epoch has a training and validation phase
-        for phase in ['train', 'valid
-        ']:
+        for phase in ['train', 'valid']:
             if phase == 'train':
                 scheduler.step()
                 model.train()  # Set model to training mode
@@ -122,8 +121,6 @@ if __name__ == '__main__':
     model_ft.fc = nn.Linear(num_ftrs,len(class_names))
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
-    print(device)
     
     model_ft = model_ft.to(device)
 
