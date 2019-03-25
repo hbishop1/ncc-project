@@ -9,66 +9,114 @@ import time
 import torchvision
 from torchvision import transforms, datasets, models
 
-def train_model(model, optimizer, scheduler, num_epochs):
-    since = time.time()
+def train_model(model, optimizer, num_epochs):
+    for epoch in range(1,num_epochs+1):
 
-    best_model_wts = model.state_dict()
-    best_acc = 0.0
-
-    softmax = nn.LogSoftmax(dim=1)
-
-    for epoch in range(num_epochs):
-        print('Epoch {}/{}'.format(epoch,num_epochs - 1))
         print('-' * 10)
+        print('Epoch {}/{}'.format(epoch,num_epochs))
+        
+        # arrays for metrics
+        train_loss_arr = np.zeros(0)
+        train_acc_arr = np.zeros(0)
+        test_loss_arr = np.zeros(0)
+        test_acc_arr = np.zeros(0)
 
-        for i,phase in enumerate(['train','valid']):
-            if phase == 'train':
-                scheduler.step()
-                model.train(True)
-            else:
-                model.train(False)
+        model.train()
+
+        # iterate over some of the train dateset
+        for i in range(1000):
+            x,t = next(train_iterator)
+            x,t = x.to(device), t.to(device)
+
+            optimiser.zero_grad()
+            p = model(x)
+            pred = p.argmax(dim=1, keepdim=True)
+            loss = torch.nn.functional.cross_entropy(p, t)
+            loss.backward()
+            optimiser.step()
+
+            train_loss_arr = np.append(train_loss_arr, loss.cpu().data)
+            train_acc_arr = np.append(train_acc_arr, pred.data.eq(t.view_as(pred)).float().mean().item())
+
+        model.eval()
+
+        # iterate entire test dataset
+        for x,t in test_loader:
+            x,t = x.to(device), t.to(device)
+
+            p = model(x)
+            loss = torch.nn.functional.cross_entropy(p, t)
+            pred = p.argmax(dim=1, keepdim=True)
+
+            test_loss_arr = np.append(test_loss_arr, loss.cpu().data)
+            test_acc_arr = np.append(test_acc_arr, pred.data.eq(t.view_as(pred)).float().mean().item())
+
+        print('Train Loss: {:.4f} Train Acc: {:.4f}'.format(train_loss_arr.mean(),train_acc_arr.mean()))
+        print('Test Loss: {:.4f} Test Acc: {:.4f}'.format(test_loss_arr.mean(),test_acc_arr.mean()))
+
+
+
+
+# def train_model(model, optimizer, scheduler, num_epochs):
+#     since = time.time()
+
+#     best_model_wts = model.state_dict()
+#     best_acc = 0.0
+
+#     softmax = nn.LogSoftmax(dim=1)
+
+#     for epoch in range(num_epochs):
+#         print('Epoch {}/{}'.format(epoch,num_epochs - 1))
+#         print('-' * 10)
+
+#         for i,phase in enumerate(['train','valid']):
+#             if phase == 'train':
+#                 scheduler.step()
+#                 model.train(True)
+#             else:
+#                 model.train(False)
             
-            running_loss = 0.0
-            running_corrects = 0
+#             running_loss = 0.0
+#             running_corrects = 0
 
-            for it,data in enumerate(dataloaders[i]):
+#             for it,data in enumerate(dataloaders[i]):
 
-                inputs,labels = data
+#                 inputs,labels = data
 
-                if torch.cuda.is_available():
-                    inputs = Variable(inputs.cuda())
-                    labels = Variable(labels.cuda())
-                else:
-                    inputs,labels = Variable(inputs),Variable(labels)
+#                 if torch.cuda.is_available():
+#                     inputs = Variable(inputs.cuda())
+#                     labels = Variable(labels.cuda())
+#                 else:
+#                     inputs,labels = Variable(inputs),Variable(labels)
 
-                optimizer.zero_grad()
+#                 optimizer.zero_grad()
 
-                outputs = model(inputs)
-                _, preds = torch.max(outputs.data, 1)
-                loss = F.nll_loss(softmax(outputs),labels)
+#                 outputs = model(inputs)
+#                 _, preds = torch.max(outputs.data, 1)
+#                 loss = F.nll_loss(softmax(outputs),labels)
 
-                if phase == 'train':
-                    loss.backward()
-                    optimizer.step()
+#                 if phase == 'train':
+#                     loss.backward()
+#                     optimizer.step()
 
-                running_loss += loss.data
-                running_corrects += torch.sum(preds == labels.data).float()
+#                 running_loss += loss.data
+#                 running_corrects += torch.sum(preds == labels.data).float()
 
-            epoch_loss = running_loss / len(dataloaders[i].dataset)
-            epoch_acc = running_corrects / len(dataloaders[i].dataset)
+#             epoch_loss = running_loss / len(dataloaders[i].dataset)
+#             epoch_acc = running_corrects / len(dataloaders[i].dataset)
 
-            print('{} Loss: {:4f} Acc: {:.4f}'.format(phase,epoch_loss,epoch_acc))
+#             print('{} Loss: {:4f} Acc: {:.4f}'.format(phase,epoch_loss,epoch_acc))
 
-            if phase == 'valid' and epoch_acc > best_acc:
-                best_acc = epoch_acc
-                best_model_wts = model.state_dict()
+#             if phase == 'valid' and epoch_acc > best_acc:
+#                 best_acc = epoch_acc
+#                 best_model_wts = model.state_dict()
 
-    time_elapsed = time.time() - since
-    print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
-    print('Best val Acc: {:4f}'.format(best_acc))
+#     time_elapsed = time.time() - since
+#     print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
+#     print('Best val Acc: {:4f}'.format(best_acc))
 
-    model.load_state_dict(best_model_wts)
-    return model
+#     model.load_state_dict(best_model_wts)
+#     return model
 
 
 if __name__ == '__main__':
@@ -96,9 +144,8 @@ if __name__ == '__main__':
         model_ft = model_ft.cuda()
 
     optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate, weight_decay = 0.05)
-    exp_lr_scheduler = optim.lr_scheduler.StepLR(optimizer_ft, step_size = 7, gamma = 0.1)
 
-    train_model(model_ft, optimizer_ft, exp_lr_scheduler, training_iterations)
+    train_model(model_ft, optimizer_ft, training_iterations)
 
 def imshow(inp):
     inp = inp.numpy().transpose((1,2,0))
