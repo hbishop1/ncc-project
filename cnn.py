@@ -112,7 +112,7 @@ def imshow(inp):
     plt.show()
 
 
-def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
+def train_model(model, criterion, optimizer, num_epochs=25):
     since = time.time()
 
     best_acc = 0.0
@@ -124,7 +124,6 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
         # Each epoch has a training and validation phase
         for phase in ['train', 'valid']:
             if phase == 'train':
-                scheduler.step()
                 model.train()  # Set model to training mode
             else:
                 model.eval()   # Set model to evaluate mode
@@ -219,10 +218,8 @@ if __name__ == '__main__':
     criterion = nn.CrossEntropyLoss()
 
     optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate)
-    exp_lr_scheduler = optim.lr_scheduler.StepLR(optimizer_ft, step_size = 7, gamma = 0.1)
 
-
-    train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler, training_iterations)
+    train_model(model_ft, criterion, optimizer_ft, training_iterations)
 
     visualize_model(model_ft)
 
