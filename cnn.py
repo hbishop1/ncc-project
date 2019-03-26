@@ -58,11 +58,11 @@ class MyNetwork(nn.Module):
 
         layers.append(Flatten())
 
-        layers.append(nn.Linear(in_features=1024*8*8, out_features=512))
+        layers.append(nn.Linear(in_features=1024*8*8, out_features=2048))
         layers.append(nn.ReLU())
-        layers.append(nn.BatchNorm1d(512))
+        layers.append(nn.BatchNorm1d(2048))
 
-        layers.append(nn.Linear(in_features=512, out_features=num_out))
+        layers.append(nn.Linear(in_features=2048, out_features=num_out))
 
         self.layers = layers
 
@@ -193,7 +193,7 @@ if __name__ == '__main__':
                                             data_transforms[x])
                     for x in ['train', 'valid']}
 
-    dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=4,
+    dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=16,
                                                 shuffle=True, num_workers=4)
                 for x in ['train', 'valid']}
                 
@@ -212,6 +212,8 @@ if __name__ == '__main__':
 
     optimizer_ft = optim.SGD(model_ft.parameters(),lr = learning_rate,momentum = 0.9)
     exp_lr_scheduler = optim.lr_scheduler.StepLR(optimizer_ft, step_size = 7, gamma = 0.1)
+
+    torch.multiprocessing.set_start_method('forkserver')
 
     train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler, training_iterations)
 
