@@ -22,7 +22,7 @@ class MyNetwork(nn.Module):
         super(MyNetwork, self).__init__()
         layers = nn.ModuleList()
 
-        layers.append(nn.Conv2d(3, 128, kernel_size=4, stride=2, padding=0))
+        layers.append(nn.Conv2d(3, 128, kernel_size=4, stride=2, padding=1))
         layers.append(nn.LeakyReLU())
         layers.append(nn.BatchNorm2d(128))
 
