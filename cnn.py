@@ -194,7 +194,7 @@ if __name__ == '__main__':
                     for x in ['train', 'valid']}
 
     dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=16,
-                                                shuffle=True, num_workers=4)
+                                                shuffle=True)
                 for x in ['train', 'valid']}
                 
     dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'valid']}
@@ -204,7 +204,7 @@ if __name__ == '__main__':
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
-    model_ft = model_ft.to(device)
+    model_ft = model_ft.to(device)    
 
     print('> Number of network parameters: ', len(torch.nn.utils.parameters_to_vector(model_ft.parameters())))
 
@@ -213,7 +213,6 @@ if __name__ == '__main__':
     optimizer_ft = optim.SGD(model_ft.parameters(),lr = learning_rate,momentum = 0.9)
     exp_lr_scheduler = optim.lr_scheduler.StepLR(optimizer_ft, step_size = 7, gamma = 0.1)
 
-    torch.multiprocessing.set_start_method('forkserver')
 
     train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler, training_iterations)
 
