@@ -58,11 +58,11 @@ class MyNetwork(nn.Module):
 
         layers.append(Flatten())
 
-        layers.append(nn.Linear(in_features=1024*8*8, out_features=2048))
+        layers.append(nn.Linear(in_features=1024*8*8, out_features=512))
         layers.append(nn.ReLU())
-        layers.append(nn.BatchNorm1d(2048))
+        layers.append(nn.BatchNorm1d(512))
 
-        layers.append(nn.Linear(in_features=2048, out_features=num_out))
+        layers.append(nn.Linear(in_features=512, out_features=num_out))
 
         self.layers = layers
 
@@ -145,11 +145,11 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 
                     # backward + optimize only if in training phase
                     if phase == 'train':
-                        loss.backward()
+                        loss.backward(create_graph=False)
                         optimizer.step()
 
                 # statistics
-                running_loss += loss.item() * inputs.size(0)
+                running_loss += float(loss.item()) * int(inputs.size(0))
                 running_corrects += torch.sum(preds == labels.data)
 
             epoch_loss = running_loss / dataset_sizes[phase]
@@ -202,9 +202,11 @@ if __name__ == '__main__':
 
     model_ft = MyNetwork(len(class_names))
 
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
     model_ft = model_ft.to(device)
+
+    print('> Number of network parameters: ', len(torch.nn.utils.parameters_to_vector(model_ft.parameters())))
 
     criterion = nn.CrossEntropyLoss()
 
