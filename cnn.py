@@ -58,9 +58,14 @@ class MyNetwork(nn.Module):
         layers.append(nn.BatchNorm2d(1024))
         layers.append(nn.MaxPool2d(kernel_size=2, stride=2, padding=0))
 
+        layers.append(nn.Conv2d(1024, 1024, kernel_size=3, stride=1, padding=1))
+        layers.append(nn.LeakyReLU())
+        layers.append(nn.BatchNorm2d(1024))
+        layers.append(nn.MaxPool2d(kernel_size=2, stride=2, padding=0))
+
         layers.append(Flatten())
 
-        layers.append(nn.Linear(in_features=1024*16*16, out_features=2048))
+        layers.append(nn.Linear(in_features=1024*8*8, out_features=2048))
         layers.append(nn.ReLU())
         layers.append(nn.BatchNorm1d(2048))
 
