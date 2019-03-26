@@ -22,7 +22,7 @@ class MyNetwork(nn.Module):
         super(MyNetwork, self).__init__()
         layers = nn.ModuleList()
 
-        layers.append(nn.Conv2d(3, 128, kernel_size=4, stride=2, padding=1))
+        layers.append(nn.Conv2d(3, 128, kernel_size=3, stride=1, padding=1))
         layers.append(nn.LeakyReLU())
         layers.append(nn.BatchNorm2d(128))
 
@@ -52,6 +52,7 @@ class MyNetwork(nn.Module):
         layers.append(nn.Conv2d(512, 1024, kernel_size=3, stride=1, padding=1))
         layers.append(nn.LeakyReLU())
         layers.append(nn.BatchNorm2d(1024))
+        layers.append(nn.MaxPool2d(kernel_size=2, stride=2, padding=0))
 
         layers.append(nn.Conv2d(1024, 1024, kernel_size=3, stride=1, padding=1))
         layers.append(nn.LeakyReLU())
@@ -217,7 +218,7 @@ if __name__ == '__main__':
 
     criterion = nn.CrossEntropyLoss()
 
-    optimizer_ft = optim.SGD(model_ft.parameters(),lr = learning_rate,momentum = 0.9)
+    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate)
     exp_lr_scheduler = optim.lr_scheduler.StepLR(optimizer_ft, step_size = 7, gamma = 0.1)
 
 
