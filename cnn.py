@@ -60,7 +60,7 @@ class MyNetwork(nn.Module):
 
         layers.append(Flatten())
 
-        layers.append(nn.Linear(in_features=1024*8*8, out_features=2048))
+        layers.append(nn.Linear(in_features=1024*16*16, out_features=2048))
         layers.append(nn.ReLU())
         layers.append(nn.BatchNorm1d(2048))
 
@@ -74,7 +74,7 @@ class MyNetwork(nn.Module):
         return x
 
 
-def visualize_model(model, num_images):
+def visualize_model(model, num_images=100):
     was_training = model.training
     model.eval()
     images_so_far = 0
@@ -173,17 +173,17 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 if __name__ == '__main__':
 
     learning_rate = 0.002
-    training_iterations = 25
+    training_iterations = 50
 
     data_transforms = {
     'train': transforms.Compose([
-        transforms.RandomResizedCrop(128),
+        transforms.RandomResizedCrop(256),
         transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]),
     'valid': transforms.Compose([
-        transforms.Resize((128,128)),
+        transforms.Resize((256,256)),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]),
