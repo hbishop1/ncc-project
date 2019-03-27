@@ -202,7 +202,7 @@ if __name__ == '__main__':
                                             data_transforms[x])
                     for x in ['train', 'valid']}
 
-    dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=16,
+    dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=8,
                                                 shuffle=True)
                 for x in ['train', 'valid']}
                 
