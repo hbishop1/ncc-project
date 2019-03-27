@@ -73,7 +73,7 @@ class MyNetwork(nn.Module):
     def forward(self, x):
         for m in self.layers:
             x = m(x)
-        return F.softmax(x)
+        return x
 
 
 def visualize_model(model, num_images=100):

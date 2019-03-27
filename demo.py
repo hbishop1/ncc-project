@@ -48,7 +48,7 @@ if __name__ == '__main__':
 
     test_images, test_labels = test_images.to(device), test_labels.to(device)
 
-    outputs = torch.softmax(model_ft(test_images))
+    outputs = F.softmax(model_ft(test_images),dim=1)
     values, test_preds = torch.max(outputs, 1)
 
     fig = plt.figure(figsize=(10, 10))
