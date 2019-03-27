@@ -25,7 +25,7 @@ def plot_image(i, predictions_array, true_label, img):
     color = '#335599' if predicted_label == true_label else '#ee4433'
     
     plt.xlabel("{} {:2.0f}% ({})".format(class_names[predicted_label],
-                                  100*np.max(predictions_array,1),
+                                  100*np.max(predictions_array),
                                   class_names[true_label]),
                                   color=color)
 
@@ -47,8 +47,8 @@ def visualize_model(model):
 
     test_images, test_labels = test_images.to(device), test_labels.to(device)
 
-    outputs = model(test_images)
-    _, test_preds = torch.max(outputs, 1)
+    test_preds = torch.softmax(outputs.view(test_images.size(0), len(class_names)), dim=1).data.squeeze().cpu().numpy()
+    
     
     num_rows = 4
     num_cols = 4
