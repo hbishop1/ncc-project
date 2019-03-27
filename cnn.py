@@ -43,6 +43,7 @@ class MyNetwork(nn.Module):
         layers.append(nn.Conv2d(384, 512, kernel_size=3, stride=1, padding=1))
         layers.append(nn.LeakyReLU())
         layers.append(nn.BatchNorm2d(512))
+        layers.append(nn.MaxPool2d(kernel_size=2, stride=2, padding=0))
 
         layers.append(nn.Conv2d(512, 512, kernel_size=3, stride=1, padding=1))
         layers.append(nn.LeakyReLU())
@@ -62,11 +63,11 @@ class MyNetwork(nn.Module):
 
         layers.append(Flatten())
 
-        layers.append(nn.Linear(in_features=1024*8*8, out_features=512))
+        layers.append(nn.Linear(in_features=1024*6*6, out_features=1024))
         layers.append(nn.ReLU())
-        layers.append(nn.BatchNorm1d(512))
+        layers.append(nn.BatchNorm1d(1024))
 
-        layers.append(nn.Linear(in_features=512, out_features=num_out))
+        layers.append(nn.Linear(in_features=1024, out_features=num_out))
 
         self.layers = layers
 
@@ -183,13 +184,13 @@ if __name__ == '__main__':
 
     data_transforms = {
     'train': transforms.Compose([
-        transforms.RandomResizedCrop(256),
+        transforms.RandomResizedCrop(384),
         transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]),
     'valid': transforms.Compose([
-        transforms.Resize((256,256)),
+        transforms.Resize((384,384)),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]),
