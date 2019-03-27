@@ -51,7 +51,7 @@ if __name__ == '__main__':
     outputs = model_ft(test_images)
     values, test_preds = torch.max(outputs, 1)
 
-    plt.figure(figsize=(10, 10))
+    fig = plt.figure(figsize=(10, 10))
     for i in range(16):
         ax = plt.subplot(4, 4, i+1)
 
@@ -67,4 +67,5 @@ if __name__ == '__main__':
 
         imshow(test_images.cpu().data[i])
 
+    fig.tight_layout()
     plt.savefig('demo.png')
