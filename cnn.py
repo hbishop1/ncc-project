@@ -218,7 +218,7 @@ if __name__ == '__main__':
 
     criterion = nn.CrossEntropyLoss()
 
-    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,momentum = 0.9)
+    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate)
     exp_lr_scheduler = optim.lr_scheduler.StepLR(optimizer_ft, step_size = 7, gamma = 0.1)
 
 
