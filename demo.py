@@ -59,7 +59,7 @@ if __name__ == '__main__':
 
         color = '#335599' if test_preds[i] == test_labels[i] else '#ee4433'
     
-        plt.title("{} {:2.0f}% ({})".format(class_names[test_preds[i]],
+        plt.title("{} \n {:2.0f}% \n ({})".format(class_names[test_preds[i]],
                                   100*values[i],
                                   class_names[test_labels[i]]),
                                   color=color,
