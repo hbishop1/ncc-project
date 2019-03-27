@@ -5,6 +5,8 @@ from torch import nn, optim
 import torch.nn.functional as F
 import numpy as np
 from torch.autograd import Variable
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import time
 import torchvision
