@@ -49,7 +49,7 @@ if __name__ == '__main__':
     test_images, test_labels = test_images.to(device), test_labels.to(device)
 
     outputs = model_ft(test_images)
-    _, test_preds = torch.max(outputs, 1)
+    values, test_preds = torch.max(outputs, 1)
 
     plt.figure(figsize=(4, 4))
     for i in range(16):
@@ -59,11 +59,11 @@ if __name__ == '__main__':
 
         color = '#335599' if test_preds[i] == test_labels[i] else '#ee4433'
     
-        plt.title("{} {:2.0f}% ({})".format(class_names[predicted_label],
-                                  100*np.max(test_preds[i]),
+        plt.title("{} {:2.0f}% ({})".format(class_names[test_preds[i]],
+                                  100*np.max(values[i]),
                                   class_names[test_labels[i]]),
                                   color=color)
 
-        imshow(test_images.cpu(0.data[i])
+        imshow(test_images.cpu(0).data[i])
 
     plt.savefig('demo.png')
