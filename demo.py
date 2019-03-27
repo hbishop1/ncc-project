@@ -53,7 +53,7 @@ if __name__ == '__main__':
 
     plt.figure(figsize=(4, 4))
     for i in range(16):
-        ax = plt.subplot(4, 4, i)
+        ax = plt.subplot(4, 4, i+1)
 
         ax.axis('off')
 
