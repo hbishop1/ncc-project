@@ -53,14 +53,14 @@ if __name__ == '__main__':
 
     plt.figure(figsize=(4, 4))
     for i in range(16):
-        ax = plt.subplot(4, 4, i+1)
+        ax = plt.subplot(4, 4, i)
 
         ax.axis('off')
 
         color = '#335599' if test_preds[i] == test_labels[i] else '#ee4433'
     
         plt.title("{} {:2.0f}% ({})".format(class_names[test_preds[i]],
-                                  100*np.max(values[i]),
+                                  100*values[i],
                                   class_names[test_labels[i]]),
                                   color=color)
 
