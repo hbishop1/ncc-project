@@ -29,7 +29,6 @@ def plot_image(i, predictions_array, true_label, img):
 
 def plot_value_array(i, predictions_array, true_label):
     predictions_array, true_label = predictions_array[i], true_label[i]
-    
     plt.axis('off')
     thisplot = plt.bar(range(len(class_names)), predictions_array, color="#777777")
     plt.ylim([0, 1]) 
@@ -63,6 +62,8 @@ def visualize_model(model):
 
 if __name__ == '__main__':
 
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
     data_transforms = transforms.Compose([
         transforms.Resize((256,256)),
@@ -82,8 +83,6 @@ if __name__ == '__main__':
     class_names = image_dataset.classes
 
     model_ft = MyNetwork(len(class_names))
-
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
     model_ft = model_ft.to(device)    
 
