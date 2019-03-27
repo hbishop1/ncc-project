@@ -68,6 +68,8 @@ class MyNetwork(nn.Module):
 
         layers.append(nn.Linear(in_features=1024, out_features=num_out))
 
+        layers.append(nn.Softmax())
+
         self.layers = layers
 
     def forward(self, x):
@@ -127,7 +129,6 @@ def train_model(model, criterion, optimizer, num_epochs=25):
         # Each epoch has a training and validation phase
         for phase in ['train', 'valid']:
             if phase == 'train':
-            
                 model.train()  # Set model to training mode
             else:
                 model.eval()   # Set model to evaluate mode
@@ -222,8 +223,6 @@ if __name__ == '__main__':
     criterion = nn.CrossEntropyLoss()
 
     optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate)
-    #exp_lr_scheduler = optim.lr_scheduler.StepLR(optimizer_ft, step_size = 7, gamma = 0.1)
-
 
     train_model(model_ft, criterion, optimizer_ft, training_iterations)
 
