@@ -63,7 +63,7 @@ if __name__ == '__main__':
                                   100*values[i],
                                   class_names[test_labels[i]]),
                                   color=color,
-                                  fontsize=6)
+                                  fontsize=10)
 
         imshow(test_images.cpu().data[i])
 
