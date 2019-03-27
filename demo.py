@@ -64,6 +64,6 @@ if __name__ == '__main__':
                                   class_names[test_labels[i]]),
                                   color=color)
 
-        imshow(test_images.cpu(0).data[i])
+        imshow(test_images.cpu().data[i])
 
     plt.savefig('demo.png')
