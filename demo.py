@@ -57,9 +57,9 @@ def visualize_model(model):
     plt.figure(figsize=(2*2*num_cols, 2*num_rows))
     for i in range(num_images):
         plt.subplot(num_rows, 2*num_cols, 2*i+1)
-        plot_image(i, test_preds.cpu(), test_labels.cpu(), test_images.cpu().squeeze().permute(1,3,2,0).contiguous().permute(3,2,1,0))
+        plot_image(i, test_preds, test_labels.cpu(), test_images.cpu().squeeze().permute(1,3,2,0).contiguous().permute(3,2,1,0))
         plt.subplot(num_rows, 2*num_cols, 2*i+2)
-    plot_value_array(i, test_preds.cpu(), test_labels.cpu())
+    plot_value_array(i, test_preds, test_labels)
     plt.savefig('demo.png')
 
 if __name__ == '__main__':
