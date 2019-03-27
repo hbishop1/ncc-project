@@ -68,14 +68,12 @@ class MyNetwork(nn.Module):
 
         layers.append(nn.Linear(in_features=1024, out_features=num_out))
 
-        layers.append(nn.Softmax())
-
         self.layers = layers
 
     def forward(self, x):
         for m in self.layers:
             x = m(x)
-        return x
+        return F.softmax(x)
 
 
 def visualize_model(model, num_images=100):
