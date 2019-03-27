@@ -47,6 +47,7 @@ def visualize_model(model):
 
     test_images, test_labels = test_images.to(device), test_labels.to(device)
 
+    outputs = model(test_images)
     test_preds = torch.softmax(outputs.view(test_images.size(0), len(class_names)), dim=1).data.squeeze().cpu().numpy()
     
     
