@@ -51,7 +51,7 @@ if __name__ == '__main__':
     outputs = model_ft(test_images)
     values, test_preds = torch.max(outputs, 1)
 
-    plt.figure(figsize=(4, 4))
+    plt.figure(figsize=(8, 8))
     for i in range(16):
         ax = plt.subplot(4, 4, i+1)
 
@@ -62,7 +62,8 @@ if __name__ == '__main__':
         plt.title("{} {:2.0f}% ({})".format(class_names[test_preds[i]],
                                   100*values[i],
                                   class_names[test_labels[i]]),
-                                  color=color)
+                                  color=color,
+                                  fontsize=10)
 
         imshow(test_images.cpu().data[i])
 
