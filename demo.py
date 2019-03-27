@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import time
 import torchvision
 from torchvision import transforms, datasets, models
-from cnn import MyNetwork
+from cnn import MyNetwork, imshow
 
 def plot_image(i, predictions_array, true_label, img):
     predictions_array, true_label, img = predictions_array[i], true_label[i], img[i]
@@ -19,7 +19,7 @@ def plot_image(i, predictions_array, true_label, img):
     plt.xticks([])
     plt.yticks([])
 
-    plt.imshow(img, cmap=plt.cm.binary)
+    plt.imshow(img)
 
     predicted_label = np.argmax(predictions_array)
     color = '#335599' if predicted_label == true_label else '#ee4433'
@@ -46,6 +46,8 @@ def visualize_model(model):
     test_images, test_labels = next(iter(dataloader))
 
     test_images, test_labels = test_images.to(device), test_labels.to(device)
+
+    
 
     outputs = model(test_images)
     test_preds = torch.softmax(outputs.view(test_images.size(0), len(class_names)), dim=1).data.squeeze().cpu().numpy()
@@ -75,6 +77,10 @@ if __name__ == '__main__':
     image_dataset = datasets.ImageFolder('dataset_fine-grained/test',data_transforms)
             
     dataloader = torch.utils.data.DataLoader(image_dataset, batch_size=16, shuffle=True)
+
+    test_images, test_labels = next(iter(dataloader))
+
+    test_images, test_labels = test_images.to(device), test_labels.to(device)
 
     class_names = image_dataset.classes
 

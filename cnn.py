@@ -102,14 +102,17 @@ def visualize_model(model, num_images=100):
                     return
         model.train(mode=was_training)
 
-def imshow(inp):
-    inp = inp.numpy().transpose((1,2,0))
-    mean = np.array([0.485,0.456,0.406])
-    std = np.array([0.229,0.224,0.225])
+
+def imshow(inp, title=None):
+    inp = inp.numpy().transpose((1, 2, 0))
+    mean = np.array([0.485, 0.456, 0.406])
+    std = np.array([0.229, 0.224, 0.225])
     inp = std * inp + mean
-    inp = np.clip(inp,0,1)
+    inp = np.clip(inp, 0, 1)
     plt.imshow(inp)
-    plt.show()
+    if title is not None:
+        plt.title(title)
+    plt.show()  # pause a bit so that plots are updated
 
 
 def train_model(model, criterion, optimizer, num_epochs=25):
