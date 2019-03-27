@@ -24,9 +24,8 @@ def plot_image(i, predictions_array, true_label, img):
     predicted_label = np.argmax(predictions_array)
     color = '#335599' if predicted_label == true_label else '#ee4433'
     
-    print(predictions_array.data)
     plt.xlabel("{} {:2.0f}% ({})".format(class_names[predicted_label],
-                                  100*np.max(predictions_array),
+                                  100*np.max(predictions_array,dim=1),
                                   class_names[true_label]),
                                   color=color)
 
