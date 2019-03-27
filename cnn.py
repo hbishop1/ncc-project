@@ -62,11 +62,11 @@ class MyNetwork(nn.Module):
 
         layers.append(Flatten())
 
-        layers.append(nn.Linear(in_features=1024*8*8, out_features=1024))
+        layers.append(nn.Linear(in_features=1024*8*8, out_features=512))
         layers.append(nn.ReLU())
-        layers.append(nn.BatchNorm1d(1024))
+        layers.append(nn.BatchNorm1d(512))
 
-        layers.append(nn.Linear(in_features=1024, out_features=num_out))
+        layers.append(nn.Linear(in_features=512, out_features=num_out))
 
         self.layers = layers
 
