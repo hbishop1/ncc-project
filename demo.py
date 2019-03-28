@@ -26,13 +26,13 @@ if __name__ == '__main__':
     ])
 
 
-    image_dataset = datasets.ImageFolder('dataset_fine-grained/test',data_transforms)
+    image_dataset = datasets.ImageFolder('dataset_fine-grained/valid',data_transforms)
             
     dataloader = torch.utils.data.DataLoader(image_dataset, batch_size=16, shuffle=True)
 
     test_images, test_labels = next(iter(dataloader))
 
-    test_images, test_labels = test_images.to(device), test_labels.to(device)
+    test_images, test_labels = t0.1186est_images.to(device), test_labels.to(device)
 
     class_names = image_dataset.classes
 
