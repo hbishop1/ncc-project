@@ -197,7 +197,7 @@ if __name__ == '__main__':
 
     criterion = nn.CrossEntropyLoss()
 
-    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.01)
+    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.03)
 
     train_model(model_ft, criterion, optimizer_ft, training_iterations)
 
