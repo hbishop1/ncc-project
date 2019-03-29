@@ -158,7 +158,7 @@ if __name__ == '__main__':
     data_transforms = {
     'train': transforms.Compose([
         transforms.RandomResizedCrop(256),
-        torchvision.transforms.RandomRotation(20),
+        torchvision.transforms.RandomRotation(15),
         transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
@@ -197,7 +197,7 @@ if __name__ == '__main__':
 
     criterion = nn.CrossEntropyLoss()
 
-    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate)
+    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.01)
 
     train_model(model_ft, criterion, optimizer_ft, training_iterations)
 
