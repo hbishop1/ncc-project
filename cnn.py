@@ -158,7 +158,7 @@ if __name__ == '__main__':
     data_transforms = {
     'train': transforms.Compose([
         transforms.RandomResizedCrop(256),
-        torchvision.transforms.RandomRotation(20)
+        torchvision.transforms.RandomRotation(20),
         transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
