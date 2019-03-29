@@ -65,6 +65,7 @@ class MyNetwork(nn.Module):
         layers.append(nn.Linear(in_features=1024*8*8, out_features=1024))
         layers.append(nn.ReLU())
         layers.append(nn.BatchNorm1d(1024))
+        layers.append(nn.Dropout(0.5))
 
         layers.append(nn.Linear(in_features=1024, out_features=num_out))
 
@@ -200,8 +201,6 @@ if __name__ == '__main__':
     optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.03)
 
     train_model(model_ft, criterion, optimizer_ft, training_iterations)
-
-    visualize_model(model_ft)
 
 
 
