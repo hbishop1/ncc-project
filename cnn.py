@@ -96,8 +96,8 @@ def train_model(model, criterion, optimizer, num_epochs=25):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
 
-        # Each epoch has a training and validation phase
-        for phase in ['train', 'valid']:
+        # Each epoch has a training and testing phase
+        for phase in ['train', 'test']:
             if phase == 'train':
                 model.train()  # Set model to training mode
             else:
@@ -136,7 +136,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
             print('{} Loss: {:.4f} Acc: {:.4f}'.format(
                 phase, epoch_loss, epoch_acc))
 
-            if phase == 'valid' and epoch_acc > best_acc:
+            if phase == 'test' and epoch_acc > best_acc:
                 best_acc = epoch_acc
                 torch.save(model.state_dict(), './model.pt')
 
@@ -162,7 +162,7 @@ if __name__ == '__main__':
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]),
-    'valid': transforms.Compose([
+    'test': transforms.Compose([
         transforms.Resize((256,256)),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
@@ -173,13 +173,13 @@ if __name__ == '__main__':
 
     image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x),
                                             data_transforms[x])
-                    for x in ['train', 'valid']}
+                    for x in ['train', 'test']}
 
     dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=16,
                                                 shuffle=True)
-                for x in ['train', 'valid']}
+                for x in ['train', 'test']}
                 
-    dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'valid']}
+    dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'test']}
     class_names = image_datasets['train'].classes
 
     model_ft = MyNetwork(len(class_names))
@@ -190,7 +190,7 @@ if __name__ == '__main__':
 
     print('> Size of training dataset: ', len(dataloaders['train'].dataset))
     
-    print('> Size of test dataset: ', len(dataloaders['valid'].dataset))
+    print('> Size of test dataset: ', len(dataloaders['test'].dataset))
 
     print('> Number of network parameters: ', len(torch.nn.utils.parameters_to_vector(model_ft.parameters())))
 
