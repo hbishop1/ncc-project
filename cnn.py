@@ -25,51 +25,42 @@ class MyNetwork(nn.Module):
         layers.append(nn.Conv2d(3, 128, kernel_size=3, stride=1, padding=1))
         layers.append(nn.LeakyReLU())
         layers.append(nn.BatchNorm2d(128))
-        layers.append(nn.Dropout(0.2))
 
         layers.append(nn.Conv2d(128, 256, kernel_size=3, stride=1, padding=1))
         layers.append(nn.LeakyReLU())
         layers.append(nn.BatchNorm2d(256))
-        layers.append(nn.Dropout(0.2))
         layers.append(nn.MaxPool2d(kernel_size=2, stride=2, padding=0))
 
         layers.append(nn.Conv2d(256, 384, kernel_size=3, stride=1, padding=1))
         layers.append(nn.LeakyReLU())
         layers.append(nn.BatchNorm2d(384))
-        layers.append(nn.Dropout(0.2))
 
         layers.append(nn.Conv2d(384, 384, kernel_size=3, stride=1, padding=1))
         layers.append(nn.LeakyReLU())
         layers.append(nn.BatchNorm2d(384))
-        layers.append(nn.Dropout(0.2))
         layers.append(nn.MaxPool2d(kernel_size=2, stride=2, padding=0))
 
         layers.append(nn.Conv2d(384, 512, kernel_size=3, stride=1, padding=1))
         layers.append(nn.LeakyReLU())
         layers.append(nn.BatchNorm2d(512))
-        layers.append(nn.Dropout(0.2))
 
         layers.append(nn.Conv2d(512, 512, kernel_size=3, stride=1, padding=1))
         layers.append(nn.LeakyReLU())
         layers.append(nn.BatchNorm2d(512))
-        layers.append(nn.Dropout(0.2))
-        layers.append(nn.MaxPool2d(kernel_size=2, stride=2, padding=0))
-
-        layers.append(nn.Conv2d(512, 512, kernel_size=3, stride=1, padding=1))
-        layers.append(nn.LeakyReLU())
-        layers.append(nn.BatchNorm2d(512))
-        layers.append(nn.Dropout(0.2))
         layers.append(nn.MaxPool2d(kernel_size=2, stride=2, padding=0))
 
         layers.append(nn.Conv2d(512, 1024, kernel_size=3, stride=1, padding=1))
         layers.append(nn.LeakyReLU())
         layers.append(nn.BatchNorm2d(1024))
-        layers.append(nn.Dropout(0.2))
+        layers.append(nn.MaxPool2d(kernel_size=2, stride=2, padding=0))
 
         layers.append(nn.Conv2d(1024, 1024, kernel_size=3, stride=1, padding=1))
         layers.append(nn.LeakyReLU())
         layers.append(nn.BatchNorm2d(1024))
-        layers.append(nn.Dropout(0.2))
+
+        layers.append(nn.Conv2d(1024, 1024, kernel_size=3, stride=1, padding=1))
+        layers.append(nn.LeakyReLU())
+        layers.append(nn.BatchNorm2d(1024))
         layers.append(nn.MaxPool2d(kernel_size=2, stride=2, padding=0))
 
 
@@ -167,7 +158,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 if __name__ == '__main__':
 
     learning_rate = 0.0001
-    training_iterations = 200
+    training_iterations = 50
 
     data_transforms = {
     'train': transforms.Compose([
@@ -211,7 +202,7 @@ if __name__ == '__main__':
 
     criterion = nn.CrossEntropyLoss()
 
-    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.03)
+    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.05)
 
     train_model(model_ft, criterion, optimizer_ft, training_iterations)
 
