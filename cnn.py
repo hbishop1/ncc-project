@@ -157,8 +157,8 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 
 if __name__ == '__main__':
 
-    learning_rate = 0.0001
-    training_iterations = 50
+    learning_rate = 0.0003
+    training_iterations = 200
 
     data_transforms = {
     'train': transforms.Compose([
