@@ -7,7 +7,6 @@ import numpy as np
 from torch.autograd import Variable
 import matplotlib.pyplot as plt
 import time
-import networkx as nx
 import torchvision
 from torchvision import transforms, datasets, models
 
