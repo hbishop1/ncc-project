@@ -7,22 +7,36 @@ import numpy as np
 from torch.autograd import Variable
 import matplotlib.pyplot as plt
 import time
+import pickle
 import torchvision
 from torchvision import transforms, datasets, models
 
 
-# class Heirachical_Loss(torch.nn.Module):
-#     def __init__(self):
+class Heirachical_Loss(torch.nn.Module):
+    def __init__(self):
+        super(Heirachical_Loss,self).__init__()
+        with open('heirachy_graph.p', 'rb') as fp:
+            self.G = pickle.load(fp)
 
-#         super(Regress_Loss,self).__init__()
-
-#     def forward(self,x,y):
-#         y_shape = y.size()[1]
-#         x_added_dim = x.unsqueeze(1)
-#         x_stacked_along_dimension1 = x_added_dim.repeat(1,NUM_WORDS,1)
-#         diff = torch.sum((y - x_stacked_along_dimension1)**2,2)
-#         totloss = torch.sum(torch.sum(torch.sum(diff)))
-#         return totloss
+    def forward(self,outputs,target):
+        probs = {x:0 for x in self.G.keys()}
+        for l, val in enumerate(outputs):
+            node = l
+            probs[node] = val
+            while self.G[node] != None:
+                node = self.G[node]
+                probs[node] += val
+        
+        node = target
+        path = [node]
+        while self.G[node] != None:
+            node = self.G[node]
+            path = [node] + path
+            
+        win = sum([(2 ** -(i+1))*probs[path[i]] for i in range(len(path))])
+        win += 2 ** -len(path) * probs[target]
+        
+        return 1-win
 
 
 
@@ -104,7 +118,6 @@ def imshow(inp, title=None):
     plt.imshow(inp)
     if title is not None:
         plt.title(title)
-    plt.show()  # pause a bit so that plots are updated
 
 
 def train_model(model, criterion, optimizer, num_epochs=25):
@@ -137,9 +150,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
                 # forward
                 # track history if only in train
                 with torch.set_grad_enabled(phase == 'train'):
-                    outputs = model(inputs)
-                    print(outputs)
-                    print(labels)
+                    outputs = F.softmax(model(inputs),dim=1)
                     _, preds = torch.max(outputs, 1)
                     loss = criterion(outputs, labels)
 
@@ -217,7 +228,7 @@ if __name__ == '__main__':
 
     print('> Number of network parameters: ', len(torch.nn.utils.parameters_to_vector(model_ft.parameters())))
 
-    criterion = nn.CrossEntropyLoss()
+    criterion = Heirachical_Loss()
 
     optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.03)
 
