@@ -19,24 +19,28 @@ class Heirachical_Loss(torch.nn.Module):
             self.G = pickle.load(fp)
 
     def forward(self,outputs,target):
-        probs = {x:0 for x in self.G.keys()}
-        for l, val in enumerate(outputs):
-            node = l
-            probs[node] = val
+
+        loss = 0
+        for i in range(len(target)):
+            probs = {x:0 for x in self.G.keys()}
+            for l, val in enumerate(outputs[i]):
+                node = l
+                probs[node] = val
+                while self.G[node] != None:
+                    node = self.G[node]
+                    probs[node] += val
+            
+            node = target
+            path = [node]
             while self.G[node] != None:
                 node = self.G[node]
-                probs[node] += val
-        
-        node = target
-        path = [node]
-        while self.G[node] != None:
-            node = self.G[node]
-            path = [node] + path
-            
-        win = sum([(2 ** -(i+1))*probs[path[i]] for i in range(len(path))])
-        win += 2 ** -len(path) * probs[target]
-        
-        return 1-win
+                path = [node] + path
+                
+            win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
+            win += 2 ** -len(path) * probs[target[i]]
+            loss += 1-win
+
+        return loss
 
 
 
