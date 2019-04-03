@@ -133,8 +133,11 @@ def train_model(model, criterion, optimizer, num_epochs=25):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
 
+        with open('results.txt','a') as results:
+            results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
+        
         # Each epoch has a training and testing phase
-        for phase in ['train', 'test']:
+        for phase in ['train', 'test']: 
             if phase == 'train':
                 model.train()  # Set model to training mode
             else:
@@ -172,6 +175,9 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 
             print('{} Loss: {:.4f} Acc: {:.4f}'.format(
                 phase, epoch_loss, epoch_acc))
+
+            with open('results.txt','a') as results:
+                results.write('{} Loss: {:.4f} Acc: {:.4f}'.format(phase, epoch_loss, epoch_acc))
 
             if phase == 'test' and epoch_acc > best_acc:
                 best_acc = epoch_acc
