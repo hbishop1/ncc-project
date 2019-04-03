@@ -30,7 +30,7 @@ class Heirachical_Loss(torch.nn.Module):
                     node = self.G[node]
                     probs[node] += val
             
-            node = target
+            node = target[i]
             path = [node]
             while self.G[node] != None:
                 node = self.G[node]
