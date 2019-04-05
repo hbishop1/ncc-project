@@ -129,6 +129,8 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 
     best_acc = 0.0
 
+    open('results.txt','w')
+
     for epoch in range(1,num_epochs+1):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
@@ -173,11 +175,11 @@ def train_model(model, criterion, optimizer, num_epochs=25):
             epoch_loss = running_loss / dataset_sizes[phase]
             epoch_acc = running_corrects.double() / dataset_sizes[phase]
 
-            print('{} Loss: {:.4f} Acc: {:.4f}'.format(
+            print('{} Loss: {:.4f} Acc: {:.4f} \n'.format(
                 phase, epoch_loss, epoch_acc))
 
             with open('results.txt','a') as results:
-                results.write('{} Loss: {:.4f} Acc: {:.4f}'.format(phase, epoch_loss, epoch_acc))
+                results.write('{} Loss: {:.4f} Acc: {:.4f} \n'.format(phase, epoch_loss, epoch_acc))
 
             if phase == 'test' and epoch_acc > best_acc:
                 best_acc = epoch_acc
@@ -195,7 +197,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 
 if __name__ == '__main__':
 
-    learning_rate = 0.00005
+    learning_rate = 0.001
     training_iterations = 500
 
     data_transforms = {
@@ -240,7 +242,7 @@ if __name__ == '__main__':
 
     criterion = Heirachical_Loss()
 
-    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.03)
+    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.005)
 
     train_model(model_ft, criterion, optimizer_ft, training_iterations)
 
