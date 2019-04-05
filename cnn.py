@@ -197,7 +197,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 
 if __name__ == '__main__':
 
-    learning_rate = 0.000001
+    learning_rate = 0.00003
     training_iterations = 500
 
     data_transforms = {
