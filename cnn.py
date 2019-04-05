@@ -129,13 +129,13 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 
     best_acc = 0.0
 
-    open('results.txt','w')
+    open('results1.txt','w')
 
     for epoch in range(1,num_epochs+1):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
 
-        with open('results.txt','a') as results:
+        with open('results1.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
         
         # Each epoch has a training and testing phase
@@ -178,7 +178,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
             print('{} Loss: {:.4f} Acc: {:.4f} \n'.format(
                 phase, epoch_loss, epoch_acc))
 
-            with open('results.txt','a') as results:
+            with open('results1.txt','a') as results:
                 results.write('{} Loss: {:.4f} Acc: {:.4f} \n'.format(phase, epoch_loss, epoch_acc))
 
             if phase == 'test' and epoch_acc > best_acc:
@@ -197,7 +197,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 
 if __name__ == '__main__':
 
-    learning_rate = 0.001
+    learning_rate = 0.0001
     training_iterations = 500
 
     data_transforms = {
