@@ -54,7 +54,7 @@ class Heirachical_Loss(torch.nn.Module):
                 pred = max(self.inv_G[pred], key=lambda x : probs[x])
             preds.append(pred)
 
-        return loss, torch.LongTensor(preds)
+        return torch.log(loss*2), torch.LongTensor(preds)
 
 
 
