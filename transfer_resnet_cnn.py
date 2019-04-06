@@ -164,7 +164,7 @@ if __name__ == '__main__':
     
     model_ft = model_ft.to(device)
 
-    criterion = nn.CrossEntropyLoss()
+    criterion = nn.Heirachical_Loss()
 
     optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.1)
 
