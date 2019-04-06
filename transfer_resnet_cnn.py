@@ -25,7 +25,7 @@ class Heirachical_Loss(torch.nn.Module):
 
         for i in range(len(target)):
             probs = {x:0 for x in self.G.keys()}
-            for l, val in enumerate(outputs[i]):
+            for l, val in enumerate(sftmax[i]):
                 node = l
                 probs[node] = val
                 while self.G[node] != None:
