@@ -159,7 +159,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
                 # forward
                 # track history if only in train
                 with torch.set_grad_enabled(phase == 'train'):
-                    outputs = F.softmax(model(inputs),dim=1)
+                    outputs = model(inputs)
                     _, preds = torch.max(outputs, 1)
                     loss = criterion(outputs, labels)
 
@@ -221,7 +221,7 @@ if __name__ == '__main__':
                                             data_transforms[x])
                     for x in ['train', 'test']}
 
-    dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=16,
+    dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=8,
                                                 shuffle=True)
                 for x in ['train', 'test']}
                 
@@ -240,7 +240,7 @@ if __name__ == '__main__':
 
     print('> Number of network parameters: ', len(torch.nn.utils.parameters_to_vector(model_ft.parameters())))
 
-    criterion = Heirachical_Loss()
+    criterion = nn.CrossEntropyLoss()
 
     optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.005)
 
