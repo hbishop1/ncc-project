@@ -17,10 +17,16 @@ class Heirachical_Loss(torch.nn.Module):
         super(Heirachical_Loss,self).__init__()
         with open('heirachy_graph.p', 'rb') as fp:
             self.G = pickle.load(fp)
+            inv = {}
+            for k, v in self.G.items():
+                inv[v] = inv.get(v, [])
+                inv[v].append(k)
+            self.inv_G = inv
 
     def forward(self,outputs,target):
 
         loss = 0
+        preds = []
         sftmax = F.softmax(outputs,dim=1)
 
         for i in range(len(target)):
@@ -36,13 +42,19 @@ class Heirachical_Loss(torch.nn.Module):
             path = [node]
             while self.G[node] != None:
                 node = self.G[node]
-                path.append(node)
+                path = [node] + path
                 
             win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
             win += 2 ** -len(path) * probs[int(target[i])]
             loss += 1-win
+            
 
-        return loss
+            pred = self.inv_G[None][0]
+            while pred in self.inv_G.keys():
+                pred = max(self.inv_G[pred], key=lambda x : probs[x])
+            preds.append(pred)
+
+        return loss, torch.LongTensor(preds)
 
 
 
@@ -93,8 +105,8 @@ def train_model(model, criterion, optimizer, num_epochs=25):
                 # track history if only in train
                 with torch.set_grad_enabled(phase == 'train'):
                     outputs = model(inputs)
-                    _, preds = torch.max(outputs, 1)
-                    loss = criterion(outputs, labels)
+                    #_, preds = torch.max(outputs, 1)
+                    loss,preds = criterion(outputs, labels)
 
                     # backward + optimize only if in training phase
                     if phase == 'train':
