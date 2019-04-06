@@ -22,7 +22,7 @@ def imshow(inp):
     plt.show()
 
 
-def train_model(model, criterion, optimizer, num_epochs=500):
+def train_model(model, criterion, optimizer, num_epochs=25):
     since = time.time()
 
     best_acc = 0.0
@@ -57,7 +57,7 @@ def train_model(model, criterion, optimizer, num_epochs=500):
 
                 # forward
                 # track history if only in train
-                with torch.set_grad_enabled(phase == 'test'):
+                with torch.set_grad_enabled(phase == 'train'):
                     outputs = model(inputs)
                     _, preds = torch.max(outputs, 1)
                     loss = criterion(outputs, labels)
@@ -93,7 +93,7 @@ def train_model(model, criterion, optimizer, num_epochs=500):
 if __name__ == '__main__':
 
     learning_rate = 0.0001
-    training_iterations = 25
+    training_iterations = 500
 
     data_transforms = {
     'train': transforms.Compose([
