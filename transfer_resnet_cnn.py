@@ -11,6 +11,7 @@ import torchvision
 from torchvision import transforms, datasets, models
 
 
+
 def imshow(inp):
     inp = inp.numpy().transpose((1,2,0))
     mean = np.array([0.485,0.456,0.406])
@@ -26,12 +27,18 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 
     best_acc = 0.0
 
-    for epoch in range(num_epochs):
+    open('results_transfer.txt','w')
+
+    for epoch in range(1,num_epochs+1):
         print('Epoch {}/{}'.format(epoch, num_epochs - 1))
         print('-' * 10)
 
+        with open('results_transfer.txt','a') as results:
+            results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
+        
+
         # Each epoch has a training and validation phase
-        for phase in ['train', 'valid']:
+        for phase in ['train', 'test']:
             if phase == 'train':
                 scheduler.step()
                 model.train()  # Set model to training mode
@@ -51,13 +58,13 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 
                 # forward
                 # track history if only in train
-                with torch.set_grad_enabled(phase == 'train'):
+                with torch.set_grad_enabled(phase == 'test'):
                     outputs = model(inputs)
                     _, preds = torch.max(outputs, 1)
                     loss = criterion(outputs, labels)
 
                     # backward + optimize only if in training phase
-                    if phase == 'train':
+                    if phase == 'test':
                         loss.backward()
                         optimizer.step()
 
@@ -71,6 +78,9 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
             print('{} Loss: {:.4f} Acc: {:.4f}'.format(
                 phase, epoch_loss, epoch_acc))
 
+            with open('results_transfer.txt','a') as results:
+                results.write('{} Loss: {:.4f} Acc: {:.4f} \n'.format(phase, epoch_loss, epoch_acc))
+
         print()
 
     time_elapsed = time.time() - since
@@ -78,15 +88,13 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
         time_elapsed // 60, time_elapsed % 60))
     print('Best val Acc: {:4f}'.format(best_acc))
 
-    # load best model weights
-    model.load_state_dict(best_model_wts)
     return model
 
 
 if __name__ == '__main__':
 
     learning_rate = 0.002
-    training_iterations = 50
+    training_iterations = 25
 
     data_transforms = {
     'train': transforms.Compose([
@@ -95,25 +103,24 @@ if __name__ == '__main__':
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]),
-    'valid': transforms.Compose([
+    'test': transforms.Compose([
         transforms.Resize((224,224)),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]),
     }
 
-
     data_dir = 'dataset_fine-grained/'
 
     image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x),
                                             data_transforms[x])
-                    for x in ['train', 'valid']}
+                    for x in ['train', 'test']}
 
-    dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=4,
+    dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=16,
                                                 shuffle=True, num_workers=4)
-                for x in ['train', 'valid']}
+                for x in ['train', 'test']}
                 
-    dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'valid']}
+    dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'test']}
     class_names = image_datasets['train'].classes
 
     model_ft = models.resnet18(pretrained=True)
@@ -131,6 +138,8 @@ if __name__ == '__main__':
     exp_lr_scheduler = optim.lr_scheduler.StepLR(optimizer_ft, step_size = 7, gamma = 0.1)
 
     train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler, training_iterations)
+
+    visualize_model(model_ft)
 
 
 
