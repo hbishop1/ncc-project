@@ -197,7 +197,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 
 if __name__ == '__main__':
 
-    learning_rate = 0.000005
+    learning_rate = 0.00001
     training_iterations = 500
 
     data_transforms = {
@@ -242,7 +242,7 @@ if __name__ == '__main__':
 
     criterion = Heirachical_Loss()
 
-    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.0)
+    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.005)
 
     train_model(model_ft, criterion, optimizer_ft, training_iterations)
 
