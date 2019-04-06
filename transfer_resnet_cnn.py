@@ -11,6 +11,39 @@ import torchvision
 from torchvision import transforms, datasets, models
 
 
+class Heirachical_Loss(torch.nn.Module):
+    def __init__(self):
+        super(Heirachical_Loss,self).__init__()
+        with open('heirachy_graph.p', 'rb') as fp:
+            self.G = pickle.load(fp)
+
+    def forward(self,outputs,target):
+
+        loss = 0
+        sftmax = F.softmax(outputs,dim=1)
+
+        for i in range(len(target)):
+            probs = {x:0 for x in self.G.keys()}
+            for l, val in enumerate(outputs[i]):
+                node = l
+                probs[node] = val
+                while self.G[node] != None:
+                    node = self.G[node]
+                    probs[node] += val
+            
+            node = int(target[i])
+            path = [node]
+            while self.G[node] != None:
+                node = self.G[node]
+                path = [node] + path
+                
+            win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
+            win += 2 ** -len(path) * probs[int(target[i])]
+            loss += 1-win
+
+        return loss
+
+
 
 def imshow(inp):
     inp = inp.numpy().transpose((1,2,0))
