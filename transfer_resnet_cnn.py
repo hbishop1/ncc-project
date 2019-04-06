@@ -92,7 +92,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 
 if __name__ == '__main__':
 
-    learning_rate = 1e-6
+    learning_rate = 5e-6
     training_iterations = 500
 
     data_transforms = {
@@ -116,7 +116,7 @@ if __name__ == '__main__':
                     for x in ['train', 'test']}
 
     dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=8,
-                                                shuffle=True, num_workers=4)
+                                                shuffle=True)
                 for x in ['train', 'test']}
                 
     dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'test']}
