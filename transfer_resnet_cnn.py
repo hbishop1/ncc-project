@@ -63,7 +63,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
                     loss = criterion(outputs, labels)
 
                     # backward + optimize only if in training phase
-                    if phase == 'test':
+                    if phase == 'train':
                         loss.backward()
                         optimizer.step()
 
