@@ -107,7 +107,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
                     outputs = model(inputs)
                     #_, preds = torch.max(outputs, 1)
                     loss, preds = criterion(outputs, labels)
-                    preds.to(device)
+                    preds = preds.to(device)
 
                     # backward + optimize only if in training phase
                     if phase == 'train':
