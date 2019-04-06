@@ -126,7 +126,9 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 
 if __name__ == '__main__':
 
-    learning_rate = 1e-4
+    # lr = 5e-6 is best for cross entropy
+
+    learning_rate = 2e-5
     training_iterations = 500
 
     data_transforms = {
@@ -167,7 +169,7 @@ if __name__ == '__main__':
 
     criterion = Heirachical_Loss()
 
-    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.1)
+    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.01)
 
     train_model(model_ft, criterion, optimizer_ft, training_iterations)
 
