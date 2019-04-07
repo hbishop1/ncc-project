@@ -18,11 +18,11 @@ class Heirachical_Loss(torch.nn.Module):
         with open('heirachy_graph.p', 'rb') as fp:
             self.G = pickle.load(fp)
 
-            inv = {}
-            for k, v in self.G.items():
-                inv[v] = inv.get(v, [])
-                inv[v].append(k)
-            self.inv_G = inv
+        inv = {}
+        for k, v in self.G.items():
+            inv[v] = inv.get(v, [])
+            inv[v].append(k)
+        self.inv_G = inv
 
     def forward(self,outputs,target):
 
@@ -62,8 +62,21 @@ class Heirachical_Loss(torch.nn.Module):
         graph[81] = None
         self.G = graph
 
+        inv = {}
+        for k, v in self.G.items():
+            inv[v] = inv.get(v, [])
+            inv[v].append(k)
+        self.inv_G = inv
+
     def heirachy_graph(self):
-        self.G = pickle.load(fp)
+        with open('heirachy_graph.p', 'rb') as fp:
+            self.G = pickle.load(fp)
+
+        inv = {}
+        for k, v in self.G.items():
+            inv[v] = inv.get(v, [])
+            inv[v].append(k)
+        self.inv_G = inv
 
 
 
@@ -91,7 +104,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
         if epoch == 100:
             with open('results_transfer1.txt','a') as results:
                 results.write('Switching to heirachical graph')
-            criterion.flat_graph
+            criterion.heirachy_graph()
 
         with open('results_transfer1.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
@@ -201,7 +214,7 @@ if __name__ == '__main__':
 
     criterion = Heirachical_Loss()
 
-    criterion.flat_graph
+    criterion.flat_graph()
 
     optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate)
 
