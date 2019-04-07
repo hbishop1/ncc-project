@@ -20,8 +20,8 @@ class Heirachical_Loss(torch.nn.Module):
 
             #graph = {i:81 for i in range(81)}    # cross entropy
             #graph[81] = None
-
-            self.G = graph
+            #self.G = graph
+            
             inv = {}
             for k, v in self.G.items():
                 inv[v] = inv.get(v, [])
