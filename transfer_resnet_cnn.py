@@ -18,10 +18,6 @@ class Heirachical_Loss(torch.nn.Module):
         with open('heirachy_graph.p', 'rb') as fp:
             self.G = pickle.load(fp)
 
-            #graph = {i:81 for i in range(81)}    # cross entropy
-            #graph[81] = None
-            #self.G = graph
-            
             inv = {}
             for k, v in self.G.items():
                 inv[v] = inv.get(v, [])
@@ -61,6 +57,14 @@ class Heirachical_Loss(torch.nn.Module):
 
         return torch.log(loss*2), torch.LongTensor(preds)
 
+    def flat_graph():
+        graph = {i:81 for i in range(81)}    # cross entropy
+        graph[81] = None
+        self.G = graph
+
+    def heirachy_graph():
+        self.G = pickle.load(fp)
+
 
 
 def imshow(inp):
@@ -83,6 +87,11 @@ def train_model(model, criterion, optimizer, num_epochs=25):
     for epoch in range(1,num_epochs+1):
         print('Epoch {}/{}'.format(epoch, num_epochs - 1))
         print('-' * 10)
+
+        if epoch == 100:
+            with open('results_transfer1.txt','a') as results:
+                results.write('Switching to heirachical graph')
+            criterion.flat_graph()
 
         with open('results_transfer1.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
@@ -125,6 +134,10 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 
             epoch_loss = running_loss / dataset_sizes[phase]
             epoch_acc = running_corrects.double() / dataset_sizes[phase]
+
+            if phase == 'test' and epoch_acc > best_acc:
+                best_acc = epoch_acc
+                torch.save(model.state_dict(), './transfer_model.pt')
 
             print('{} Loss: {:.4f} Acc: {:.4f}'.format(
                 phase, epoch_loss, epoch_acc))
@@ -181,11 +194,14 @@ if __name__ == '__main__':
     model_ft.fc = nn.Linear(num_ftrs,len(class_names))
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
     
     model_ft = model_ft.to(device)
 
+    #model_ft.load_state_dict(torch.load('./transfer_model.pt',map_location='cpu'))
+
     criterion = Heirachical_Loss()
+
+    criterion.flat_graph
 
     optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate)
 
