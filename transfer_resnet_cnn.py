@@ -102,11 +102,11 @@ def train_model(model, criterion, optimizer, num_epochs=25):
         print('-' * 10)
 
         if epoch == 100:
-            with open('results_transfer1.txt','a') as results:
+            with open('results_transfer.txt','a') as results:
                 results.write('Switching to heirachical graph')
             criterion.heirachy_graph()
 
-        with open('results_transfer1.txt','a') as results:
+        with open('results_transfer.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
         
 
@@ -155,7 +155,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
             print('{} Loss: {:.4f} Acc: {:.4f}'.format(
                 phase, epoch_loss, epoch_acc))
 
-            with open('results_transfer1.txt','a') as results:
+            with open('results_transfer.txt','a') as results:
                 results.write('{} Loss: {:.4f} Acc: {:.4f} \n'.format(phase, epoch_loss, epoch_acc))
 
         print()
@@ -172,7 +172,7 @@ if __name__ == '__main__':
 
     # lr = 5e-6 is best for cross entropy
 
-    learning_rate = 1e-4
+    learning_rate = 1e-3
     training_iterations = 500
 
     data_transforms = {
@@ -214,7 +214,7 @@ if __name__ == '__main__':
 
     criterion = Heirachical_Loss()
 
-    criterion.flat_graph()
+    #criterion.flat_graph()
 
     optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate)
 
