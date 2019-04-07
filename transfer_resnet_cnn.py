@@ -16,9 +16,11 @@ class Heirachical_Loss(torch.nn.Module):
     def __init__(self):
         super(Heirachical_Loss,self).__init__()
         with open('heirachy_graph.p', 'rb') as fp:
-            #self.G = pickle.load(fp)
-            graph = {i:81 for i in range(81)}
-            graph[81] = None
+            self.G = pickle.load(fp)
+
+            #graph = {i:81 for i in range(81)}    # cross entropy
+            #graph[81] = None
+
             self.G = graph
             inv = {}
             for k, v in self.G.items():
@@ -45,7 +47,7 @@ class Heirachical_Loss(torch.nn.Module):
             path = [node]
             while self.G[node] != None:
                 node = self.G[node]
-                path = [node] + path
+                path = path + [node]
                 
             win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
             win += 2 ** -len(path) * probs[int(target[i])]
