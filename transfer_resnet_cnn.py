@@ -16,7 +16,10 @@ class Heirachical_Loss(torch.nn.Module):
     def __init__(self):
         super(Heirachical_Loss,self).__init__()
         with open('heirachy_graph.p', 'rb') as fp:
-            self.G = pickle.load(fp)
+            #self.G = pickle.load(fp)
+            graph = {i:81 for i in range(81)}
+            graph[81] = None
+            self.G = graph
             inv = {}
             for k, v in self.G.items():
                 inv[v] = inv.get(v, [])
