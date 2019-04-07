@@ -172,7 +172,7 @@ if __name__ == '__main__':
 
     # lr = 5e-6 is best for cross entropy
 
-    learning_rate = 5e-6
+    learning_rate = 2e-5
     training_iterations = 500
 
     data_transforms = {
@@ -214,7 +214,7 @@ if __name__ == '__main__':
 
     criterion.flat_graph()
 
-    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate)
+    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.005)
 
     train_model(model_ft, criterion, optimizer_ft, training_iterations)
 
