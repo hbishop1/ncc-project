@@ -172,7 +172,7 @@ if __name__ == '__main__':
 
     # lr = 5e-6 is best for cross entropy
 
-    learning_rate = 1e-3
+    learning_rate = 5e-6
     training_iterations = 500
 
     data_transforms = {
@@ -210,11 +210,9 @@ if __name__ == '__main__':
     
     model_ft = model_ft.to(device)
 
-    #model_ft.load_state_dict(torch.load('./transfer_model.pt',map_location='cpu'))
-
     criterion = Heirachical_Loss()
 
-    #criterion.flat_graph()
+    criterion.flat_graph()
 
     optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate)
 
