@@ -43,7 +43,7 @@ class Heirachical_Loss(torch.nn.Module):
             path = [node]
             while self.G[node] != None:
                 node = self.G[node]
-                path = path + [node]
+                path = [node] + path
                 
             win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
             win += 2 ** -len(path) * probs[int(target[i])]
@@ -91,7 +91,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
         if epoch == 100:
             with open('results_transfer1.txt','a') as results:
                 results.write('Switching to heirachical graph')
-            criterion.flat_graph()
+            criterion.flat_graph
 
         with open('results_transfer1.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
