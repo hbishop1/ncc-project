@@ -57,12 +57,12 @@ class Heirachical_Loss(torch.nn.Module):
 
         return torch.log(loss*2), torch.LongTensor(preds)
 
-    def flat_graph():
+    def flat_graph(self):
         graph = {i:81 for i in range(81)}    # cross entropy
         graph[81] = None
         self.G = graph
 
-    def heirachy_graph():
+    def heirachy_graph(self):
         self.G = pickle.load(fp)
 
 
