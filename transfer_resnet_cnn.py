@@ -101,7 +101,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
         print('Epoch {}/{}'.format(epoch, num_epochs - 1))
         print('-' * 10)
 
-        if epoch == 50:
+        if epoch == 201:
             with open('results_transfer.txt','a') as results:
                 results.write('Switching to heirachical graph \n')
             criterion.heirachy_graph()
@@ -177,7 +177,7 @@ if __name__ == '__main__':
     # lr = 5e-6 is best for cross entropy
 
     learning_rate = 5e-6
-    training_iterations = 500
+    training_iterations = 200
 
     data_transforms = {
     'train': transforms.Compose([
