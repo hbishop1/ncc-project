@@ -95,18 +95,18 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 
     best_acc = 0.0
 
-    open('results_transfer1.txt','w')
+    open('results_transfer.txt','w')
 
     for epoch in range(1,num_epochs+1):
         print('Epoch {}/{}'.format(epoch, num_epochs - 1))
         print('-' * 10)
 
         if epoch == 100:
-            with open('results_transfer1.txt','a') as results:
+            with open('results_transfer.txt','a') as results:
                 results.write('Switching to heirachical graph')
             criterion.heirachy_graph()
 
-        with open('results_transfer1.txt','a') as results:
+        with open('results_transfer.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
         
 
@@ -155,7 +155,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
             print('{} Loss: {:.4f} Acc: {:.4f}'.format(
                 phase, epoch_loss, epoch_acc))
 
-            with open('results_transfer1.txt','a') as results:
+            with open('results_transfer.txt','a') as results:
                 results.write('{} Loss: {:.4f} Acc: {:.4f} \n'.format(phase, epoch_loss, epoch_acc))
 
         print()
@@ -172,7 +172,7 @@ if __name__ == '__main__':
 
     # lr = 5e-6 is best for cross entropy
 
-    learning_rate = 5e-6
+    learning_rate = 5e-5
     training_iterations = 500
 
     data_transforms = {
