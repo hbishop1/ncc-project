@@ -155,7 +155,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
             print('{} Loss: {:.4f} Acc: {:.4f}'.format(
                 phase, epoch_loss, epoch_acc))
 
-            with open('results_transfer.txt','a') as results:
+            with open('results_transfer1.txt','a') as results:
                 results.write('{} Loss: {:.4f} Acc: {:.4f} \n'.format(phase, epoch_loss, epoch_acc))
 
         print()
