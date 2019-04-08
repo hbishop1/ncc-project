@@ -47,7 +47,7 @@ class Heirachical_Loss(torch.nn.Module):
                 
             win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
             win += 2 ** -len(path) * probs[int(target[i])]
-            loss += 1-win
+            loss += torch.log(2*(1-win))
             
 
             pred = self.inv_G[None][0]
@@ -55,7 +55,7 @@ class Heirachical_Loss(torch.nn.Module):
                 pred = max(self.inv_G[pred], key=lambda x : probs[x])
             preds.append(pred)
 
-        return torch.log(loss*2), torch.LongTensor(preds)
+        return loss, torch.LongTensor(preds)
 
     def flat_graph(self):
         graph = {i:81 for i in range(81)}    # cross entropy
@@ -172,7 +172,7 @@ if __name__ == '__main__':
 
     # lr = 5e-6 is best for cross entropy
 
-    learning_rate = 2e-5
+    learning_rate = 5e-6
     training_iterations = 500
 
     data_transforms = {
