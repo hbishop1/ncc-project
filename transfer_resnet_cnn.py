@@ -132,9 +132,9 @@ def train_model(model, criterion, optimizer, num_epochs=25):
                 # track history if only in train
                 with torch.set_grad_enabled(phase == 'train'):
                     outputs = model(inputs)
-                    _, preds = torch.max(outputs, 1)
-                    loss = criterion(outputs, labels)
-                    #preds = preds.to(device)
+                    #_, preds = torch.max(outputs, 1)
+                    loss, preds = criterion(outputs, labels)
+                    preds = preds.to(device)
 
                     # backward + optimize only if in training phase
                     if phase == 'train':
@@ -210,9 +210,9 @@ if __name__ == '__main__':
     
     model_ft = model_ft.to(device)
 
-    criterion = nn.CrossEntropyLoss()
+    criterion = Heirachical_Loss()
 
-    #criterion.flat_graph()
+    criterion.flat_graph()
 
     optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.005)
 
