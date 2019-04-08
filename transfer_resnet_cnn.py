@@ -34,10 +34,10 @@ class Heirachical_Loss(torch.nn.Module):
             probs = {x:0 for x in self.G.keys()}
             for l, val in enumerate(sftmax[i]):
                 node = l
-                probs[node] = torch.log(val)
+                probs[node] = val
                 while self.G[node] != None:
                     node = self.G[node]
-                    probs[node] += torch.log(val)
+                    probs[node] += val
             
             node = int(target[i])
             path = [node]
@@ -47,7 +47,7 @@ class Heirachical_Loss(torch.nn.Module):
                 
             win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
             win += 2 ** -len(path) * probs[int(target[i])]
-            loss += 2*(1-win)
+            loss += -(torch.log(2*(win-0.5)) / len(target))
             
 
             pred = self.inv_G[None][0]
