@@ -98,7 +98,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
     open('results_transfer.txt','w')
 
     for epoch in range(1,num_epochs+1):
-        print('Epoch {}/{}'.format(epoch, num_epochs - 1))
+        print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
 
         if epoch % 1 == 0:
@@ -106,7 +106,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
                 results.write('Switching to heirachical graph \n')
             criterion.heirachy_graph()
         else:
-             with open('results_transfer.txt','a') as results:
+            with open('results_transfer.txt','a') as results:
                 results.write('Switching to heirachical graph \n')
             criterion.heirachy_graph()
 
