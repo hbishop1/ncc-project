@@ -105,7 +105,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
             with open('results_transfer.txt','a') as results:
                 results.write('Switching to heirachical graph \n')
             criterion.heirachy_graph()
-        else epoch % 10 == 5:
+        else:
              with open('results_transfer.txt','a') as results:
                 results.write('Switching to heirachical graph \n')
             criterion.heirachy_graph()
