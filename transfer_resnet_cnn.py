@@ -102,14 +102,14 @@ def train_model(model, criterion, optimizer, num_epochs=25):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
 
-        # if epoch == 100:
-        #     with open('results_transfer.txt','a') as results:
-        #         results.write('Switching to heirachical graph \n')
-        #     criterion.heirachy_graph()
-        # else:
-        #     with open('results_transfer.txt','a') as results:
-        #         results.write('Switching to flat graph \n')
-        #     criterion.flat_graph()
+        if epoch % 20 == 10:
+            with open('results_transfer.txt','a') as results:
+                results.write('Switching to heirachical graph \n')
+            criterion.heirachy_graph()
+        elif epoch % 20 == 0 and epoch != 0:
+            with open('results_transfer.txt','a') as results:
+                results.write('Switching to flat graph \n')
+            criterion.flat_graph()
 
         with open('results_transfer.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
@@ -215,11 +215,11 @@ if __name__ == '__main__':
     
     model_ft = model_ft.to(device)
 
-    model_ft.load_state_dict(torch.load('./transfer_model_flatgraph.pt',map_location='cpu'))
+    #model_ft.load_state_dict(torch.load('./transfer_model_flatgraph.pt',map_location='cpu'))
 
     criterion = Heirachical_Loss()
 
-    criterion.heirachy_graph()
+    criterion.flat_graph()
 
     optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.005)
 
