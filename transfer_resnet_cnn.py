@@ -42,7 +42,7 @@ class Heirachical_Loss(torch.nn.Module):
             node = int(target[i])
             path = []
             while self.G[node] != None:
-                path = path + [node]
+                path = [node] + path 
                 node = self.G[node]
                 
             win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
@@ -215,7 +215,7 @@ if __name__ == '__main__':
     
     model_ft = model_ft.to(device)
 
-    #model_ft.load_state_dict(torch.load('./transfer_model_flatgraph.pt',map_location='cpu'))
+    model_ft.load_state_dict(torch.load('./transfer_model_flatgraph.pt',map_location='cpu'))
 
     criterion = Heirachical_Loss()
 
