@@ -44,11 +44,10 @@ class Heirachical_Loss(torch.nn.Module):
             while self.G[node] != None:
                 path = path + [node]
                 node = self.G[node]
-            print(path)
                 
             win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
             win += 2 ** -len(path) * probs[int(target[i])]
-            loss += -(torch.log(2*win) / len(target))
+            loss += -(torch.log(win) / len(target))
             
 
             pred = self.inv_G[None][0]
@@ -56,7 +55,6 @@ class Heirachical_Loss(torch.nn.Module):
                 pred = max(self.inv_G[pred], key=lambda x : probs[x])
             preds.append(pred)
 
-        print(loss)
 
         return loss, torch.LongTensor(preds)
 
