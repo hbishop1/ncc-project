@@ -43,7 +43,7 @@ class Heirachical_Loss(torch.nn.Module):
             path = [node]
             while self.G[node] != None:
                 node = self.G[node]
-                path = [node] + path
+                path = path + [node]
                 
             win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
             win += 2 ** -len(path) * probs[int(target[i])]
@@ -101,10 +101,10 @@ def train_model(model, criterion, optimizer, num_epochs=25):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
 
-        # if epoch % 1 == 0:
-        #     with open('results_transfer.txt','a') as results:
-        #         results.write('Switching to heirachical graph \n')
-        #     criterion.heirachy_graph()
+        if epoch == 100:
+            with open('results_transfer.txt','a') as results:
+                results.write('Switching to heirachical graph \n')
+            criterion.heirachy_graph()
         # else:
         #     with open('results_transfer.txt','a') as results:
         #         results.write('Switching to flat graph \n')
@@ -154,7 +154,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 
             if phase == 'test' and epoch_acc > best_acc:
                 best_acc = epoch_acc
-                torch.save(model.state_dict(), './transfer_model_flatgraph.pt')
+                torch.save(model.state_dict(), './transfer_model.pt')
 
             print('{} Loss: {:.4f} Acc: {:.4f}'.format(
                 phase, epoch_loss, epoch_acc))
