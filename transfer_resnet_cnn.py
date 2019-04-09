@@ -42,7 +42,7 @@ class Heirachical_Loss(torch.nn.Module):
             node = int(target[i])
             path = []
             while self.G[node] != None:
-                path = path + [node]
+                path = [node] + path 
                 node = self.G[node]
                 
             win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
@@ -96,22 +96,22 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 
     best_acc = 0.0
 
-    open('results_transfer1.txt','w')
+    open('results_transfer.txt','w')
 
     for epoch in range(1,num_epochs+1):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
 
-        if epoch == 100:
-            with open('results_transfer1.txt','a') as results:
-                results.write('Switching to heirachical graph \n')
-            criterion.heirachy_graph()
+        # if epoch == 100:
+        #     with open('results_transfer.txt','a') as results:
+        #         results.write('Switching to heirachical graph \n')
+        #     criterion.heirachy_graph()
         # else:
         #     with open('results_transfer.txt','a') as results:
         #         results.write('Switching to flat graph \n')
         #     criterion.flat_graph()
 
-        with open('results_transfer1.txt','a') as results:
+        with open('results_transfer.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
         
 
@@ -160,7 +160,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
             print('{} Loss: {:.4f} Acc: {:.4f}'.format(
                 phase, epoch_loss, epoch_acc))
 
-            with open('results_transfer1.txt','a') as results:
+            with open('results_transfer.txt','a') as results:
                 results.write('{} Loss: {:.4f} Acc: {:.4f} \n'.format(phase, epoch_loss, epoch_acc))
 
         print()
@@ -177,7 +177,7 @@ if __name__ == '__main__':
 
     # lr = 5e-6 is best for cross entropy
 
-    learning_rate = 2e-5
+    learning_rate = 5e-6
     training_iterations = 200
 
     data_transforms = {
@@ -215,11 +215,13 @@ if __name__ == '__main__':
     
     model_ft = model_ft.to(device)
 
+    model_ft.load_state_dict(torch.load('./transfer_model_flatgraph.pt',map_location='cpu'))
+
     criterion = Heirachical_Loss()
 
     criterion.heirachy_graph()
 
-    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.0)
+    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.05)
 
     train_model(model_ft, criterion, optimizer_ft, training_iterations)
 
