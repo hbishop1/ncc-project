@@ -101,14 +101,14 @@ def train_model(model, criterion, optimizer, num_epochs=25):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
 
-        if epoch % 1 == 0:
-            with open('results_transfer.txt','a') as results:
-                results.write('Switching to heirachical graph \n')
-            criterion.heirachy_graph()
-        else:
-            with open('results_transfer.txt','a') as results:
-                results.write('Switching to heirachical graph \n')
-            criterion.heirachy_graph()
+        # if epoch % 1 == 0:
+        #     with open('results_transfer.txt','a') as results:
+        #         results.write('Switching to heirachical graph \n')
+        #     criterion.heirachy_graph()
+        # else:
+        #     with open('results_transfer.txt','a') as results:
+        #         results.write('Switching to flat graph \n')
+        #     criterion.flat_graph()
 
         with open('results_transfer.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
@@ -154,7 +154,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 
             if phase == 'test' and epoch_acc > best_acc:
                 best_acc = epoch_acc
-                torch.save(model.state_dict(), './transfer_model.pt')
+                torch.save(model.state_dict(), './transfer_model_flatgraph.pt')
 
             print('{} Loss: {:.4f} Acc: {:.4f}'.format(
                 phase, epoch_loss, epoch_acc))
@@ -216,7 +216,7 @@ if __name__ == '__main__':
 
     criterion = Heirachical_Loss()
 
-    criterion.heirachy_graph()
+    criterion.flat_graph()
 
     optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.005)
 
