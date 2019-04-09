@@ -40,20 +40,23 @@ class Heirachical_Loss(torch.nn.Module):
                     probs[node] += val
             
             node = int(target[i])
-            path = [node]
+            path = []
             while self.G[node] != None:
-                node = self.G[node]
                 path = path + [node]
+                node = self.G[node]
+            print(path)
                 
             win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
             win += 2 ** -len(path) * probs[int(target[i])]
-            loss += -(torch.log(2*(win-0.5)) / len(target))
+            loss += -(torch.log(2*win) / len(target))
             
 
             pred = self.inv_G[None][0]
             while pred in self.inv_G.keys():
                 pred = max(self.inv_G[pred], key=lambda x : probs[x])
             preds.append(pred)
+
+        print(loss)
 
         return loss, torch.LongTensor(preds)
 
@@ -216,7 +219,7 @@ if __name__ == '__main__':
 
     criterion = Heirachical_Loss()
 
-    criterion.flat_graph()
+    criterion.heirachy_graph()
 
     optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.05)
 
