@@ -42,7 +42,7 @@ class Heirachical_Loss(torch.nn.Module):
             node = int(target[i])
             path = []
             while self.G[node] != None:
-                path = path + [node]
+                path = [node] + path
                 node = self.G[node]
                 
             win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
@@ -177,7 +177,7 @@ if __name__ == '__main__':
 
     # lr = 5e-6 is best for cross entropy
 
-    learning_rate = 5e-4
+    learning_rate = 5e-6
     training_iterations = 200
 
     data_transforms = {
@@ -215,13 +215,13 @@ if __name__ == '__main__':
     
     model_ft = model_ft.to(device)
 
-    #model_ft.load_state_dict(torch.load('./transfer_model_flatgraph.pt',map_location='cpu'))
+    model_ft.load_state_dict(torch.load('./transfer_model_flatgraph.pt',map_location='cpu'))
 
     criterion = Heirachical_Loss()
 
     criterion.heirachy_graph()
 
-    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.05)
+    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.0)
 
     train_model(model_ft, criterion, optimizer_ft, training_iterations)
 
