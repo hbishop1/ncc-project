@@ -221,7 +221,7 @@ if __name__ == '__main__':
 
     criterion.heirachy_graph()
 
-    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.05)
+    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.0)
 
     train_model(model_ft, criterion, optimizer_ft, training_iterations)
 
