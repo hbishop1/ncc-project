@@ -218,7 +218,7 @@ if __name__ == '__main__':
 
     criterion.flat_graph()
 
-    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.005)
+    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.05)
 
     train_model(model_ft, criterion, optimizer_ft, training_iterations)
 
