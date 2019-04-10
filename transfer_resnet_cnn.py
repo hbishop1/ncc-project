@@ -187,7 +187,7 @@ if __name__ == '__main__':
 
     # lr = 5e-6 is best for cross entropy
 
-    learning_rate = 5e-5
+    learning_rate = 5e-6
     training_iterations = 200
 
     data_transforms = {
