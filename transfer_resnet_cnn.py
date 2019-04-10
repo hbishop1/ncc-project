@@ -156,11 +156,11 @@ def train_model(model, criterion, optimizer, num_epochs=25):
                 # statistics
                 running_loss += loss.item() * inputs.size(0)
                 running_corrects += torch.sum(preds == labels.data)
-                running_distance += distance
+                running_distance += distance.item()
 
             epoch_loss = running_loss / dataset_sizes[phase]
             epoch_acc = running_corrects.double() / dataset_sizes[phase]
-            epoch_dist = running_distance.double() / dataset_sizes[phase]
+            epoch_dist = running_distance / dataset_sizes[phase]
 
             if phase == 'test' and epoch_acc > best_acc:
                 best_acc = epoch_acc
