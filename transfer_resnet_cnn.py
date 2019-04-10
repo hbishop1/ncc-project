@@ -109,14 +109,14 @@ def train_model(model, criterion, optimizer, num_epochs=25):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
 
-        # if epoch % 15 == 5:
-        #     with open('results_transfer.txt','a') as results:
-        #         results.write('Switching to flat graph \n')
-        #     criterion.flat_graph()
-        # elif epoch % 15 == 0 and epoch != 0:
-        #     with open('results_transfer.txt','a') as results:
-        #         results.write('Switching to heirachical graph \n')
-        #     criterion.heirachy_graph()
+        if epoch % 10 == 9:
+            with open('results_transfer.txt','a') as results:
+                results.write('Switching to flat graph \n')
+            criterion.flat_graph()
+        elif epoch % 10 == 0 and epoch != 0:
+            with open('results_transfer.txt','a') as results:
+                results.write('Switching to heirachical graph \n')
+            criterion.heirachy_graph()
 
         with open('results_transfer1.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
