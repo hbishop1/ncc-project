@@ -16,13 +16,26 @@ class Heirachical_Loss(torch.nn.Module):
     def __init__(self):
         super(Heirachical_Loss,self).__init__()
         with open('heirachy_graph.p', 'rb') as fp:
-            self.G = pickle.load(fp)
+            self.heirachy_G = pickle.load(fp)
 
         inv = {}
-        for k, v in self.G.items():
+        for k, v in self.heirachy_G.items():
             inv[v] = inv.get(v, [])
             inv[v].append(k)
-        self.inv_G = inv
+        self.inv_heirachy_G = inv
+
+        graph = {i:81 for i in range(81)}    # cross entropy
+        graph[81] = None
+
+        self.flat_G = graph
+
+        inv = {}
+        for k, v in self.flat_G.items():
+            inv[v] = inv.get(v, [])
+            inv[v].append(k)
+        self.inv_flat_G = inv
+
+        self.heirachy = True
 
     def forward(self,outputs,target):
 
@@ -31,58 +44,47 @@ class Heirachical_Loss(torch.nn.Module):
         preds = []
         sftmax = F.softmax(outputs,dim=1)
 
+        graph = self.heirachy_G if self.heirachy else self.flat_G
+        inv_graph = self.inv_heirachy_G if self.heirachy else self.inv_flat_G
+
         for i in range(len(target)):
-            probs = {x:0 for x in self.G.keys()}
+            probs = {x:0 for x in graph.keys()}
             for l, val in enumerate(sftmax[i]):
                 node = l
                 probs[node] = val
-                while self.G[node] != None:
-                    node = self.G[node]
+                while graph[node] != None:
+                    node = graph[node]
                     probs[node] += val
             
             node = int(target[i])
             path = []
-            while self.G[node] != None:
+            while graph[node] != None:
                 path = [node] + path 
-                node = self.G[node]
+                node = graph[node]
                 
             win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
             win += 2 ** -len(path) * probs[int(target[i])]
             loss += -(torch.log(win) / len(target))
 
-            pred = self.inv_G[None][0]
-            while pred in self.inv_G.keys():
-                pred = max(self.inv_G[pred], key=lambda x : probs[x])
+            pred = inv_graph[None][0]
+            while pred in inv_graph.keys():
+                pred = max(inv_graph[pred], key=lambda x : probs[x])
             preds.append(pred)
 
-            node = pred
-            while node not in path and self.G[node] != None:
+
+            node1, node2 = pred, int(target[i])
+            while node1 != node2:
                 total_dist += 1
-                node = self.G[node]
+                node1, node2 = self.heirachy_G[node1], self.heirachy_G[node2]
 
 
-        return loss, torch.LongTensor(preds), torch.Tensor([total_dist])
+        return loss, torch.LongTensor(preds), torch.tensor(total_dist)
 
     def flat_graph(self):
-        graph = {i:81 for i in range(81)}    # cross entropy
-        graph[81] = None
-        self.G = graph
-
-        inv = {}
-        for k, v in self.G.items():
-            inv[v] = inv.get(v, [])
-            inv[v].append(k)
-        self.inv_G = inv
+        self.heirachy = False
 
     def heirachy_graph(self):
-        with open('heirachy_graph.p', 'rb') as fp:
-            self.G = pickle.load(fp)
-
-        inv = {}
-        for k, v in self.G.items():
-            inv[v] = inv.get(v, [])
-            inv[v].append(k)
-        self.inv_G = inv
+        self.heirachy = True
 
 
 
@@ -158,7 +160,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 
             epoch_loss = running_loss / dataset_sizes[phase]
             epoch_acc = running_corrects.double() / dataset_sizes[phase]
-            epoch_dist = running_distance / dataset_sizes[phase]
+            epoch_dist = running_distance.double() / dataset_sizes[phase]
 
             if phase == 'test' and epoch_acc > best_acc:
                 best_acc = epoch_acc
