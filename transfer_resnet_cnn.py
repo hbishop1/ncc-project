@@ -109,11 +109,11 @@ def train_model(model, criterion, optimizer, num_epochs=25):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
 
-        if epoch % 20 == 10:
+        if epoch % 10 == 5:
             with open('results_transfer1.txt','a') as results:
                 results.write('Switching to heirachical graph \n')
             criterion.heirachy_graph()
-        elif epoch % 20 == 0 and epoch != 0:
+        elif epoch % 10 == 0 and epoch != 0:
             with open('results_transfer1.txt','a') as results:
                 results.write('Switching to flat graph \n')
             criterion.flat_graph()
