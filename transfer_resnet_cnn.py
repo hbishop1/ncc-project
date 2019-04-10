@@ -103,22 +103,22 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 
     best_acc = 0.0
 
-    open('results_transfer.txt','w')
+    open('results_transfer1.txt','w')
 
     for epoch in range(1,num_epochs+1):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
 
-        if epoch % 20 == 10:
-            with open('results_transfer.txt','a') as results:
-                results.write('Switching to heirachical graph \n')
-            criterion.heirachy_graph()
-        elif epoch % 20 == 0 and epoch != 0:
-            with open('results_transfer.txt','a') as results:
-                results.write('Switching to flat graph \n')
-            criterion.flat_graph()
+        # if epoch % 20 == 10:
+        #     with open('results_transfer.txt','a') as results:
+        #         results.write('Switching to heirachical graph \n')
+        #     criterion.heirachy_graph()
+        # elif epoch % 20 == 0 and epoch != 0:
+        #     with open('results_transfer.txt','a') as results:
+        #         results.write('Switching to flat graph \n')
+        #     criterion.flat_graph()
 
-        with open('results_transfer.txt','a') as results:
+        with open('results_transfer1.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
         
 
@@ -169,7 +169,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
             print('{} Loss: {:.4f} Acc: {:.4f} Dist: {:.4f}'.format(
                 phase, epoch_loss, epoch_acc, epoch_dist))
 
-            with open('results_transfer.txt','a') as results:
+            with open('results_transfer1.txt','a') as results:
                 results.write('{} Loss: {:.4f} Acc: {:.4f} Dist: {:.4f} \n'.format(
                     phase, epoch_loss, epoch_acc, epoch_dist))
 
