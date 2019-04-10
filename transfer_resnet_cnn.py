@@ -61,7 +61,7 @@ class Heirachical_Loss(torch.nn.Module):
                 node = self.G[node]
 
 
-        return loss, torch.LongTensor(preds), total_dist
+        return loss, torch.LongTensor(preds), torch.Tensor(total_dist)
 
     def flat_graph(self):
         graph = {i:81 for i in range(81)}    # cross entropy
@@ -168,7 +168,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
                 best_acc = epoch_acc
                 torch.save(model.state_dict(), './transfer_model.pt')
 
-            print('{} Loss: {:.4f} Acc: {:.4f}'.format(
+            print('{} Loss: {:.4f} Acc: {:.4f} Dist: {:.4f}'.format(
                 phase, epoch_loss, epoch_acc, epoch_dist))
 
             with open('results_transfer.txt','a') as results:
