@@ -225,7 +225,7 @@ if __name__ == '__main__':
     
     model_ft = model_ft.to(device)
 
-    #model_ft.load_state_dict(torch.load('./transfer_model_flatgraph.pt',map_location='cpu'))
+    model_ft.load_state_dict(torch.load('./transfer_model_flatgraph.pt',map_location='cpu'))
 
     criterion = Heirachical_Loss()
 
