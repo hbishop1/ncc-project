@@ -27,6 +27,7 @@ class Heirachical_Loss(torch.nn.Module):
     def forward(self,outputs,target):
 
         loss = 0
+        total_dist = 0
         preds = []
         sftmax = F.softmax(outputs,dim=1)
 
@@ -48,15 +49,19 @@ class Heirachical_Loss(torch.nn.Module):
             win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
             win += 2 ** -len(path) * probs[int(target[i])]
             loss += -(torch.log(win) / len(target))
-            
 
             pred = self.inv_G[None][0]
             while pred in self.inv_G.keys():
                 pred = max(self.inv_G[pred], key=lambda x : probs[x])
             preds.append(pred)
 
+            node = pred
+            while node not in path and self.G[node] != None:
+                total_dist += 1
+                node = self.G[node]
 
-        return loss, torch.LongTensor(preds)
+
+        return loss, torch.LongTensor(preds), total_dist
 
     def flat_graph(self):
         graph = {i:81 for i in range(81)}    # cross entropy
@@ -102,14 +107,14 @@ def train_model(model, criterion, optimizer, num_epochs=25):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
 
-        # if epoch % 20 == 10:
-        #     with open('results_transfer.txt','a') as results:
-        #         results.write('Switching to heirachical graph \n')
-        #     criterion.heirachy_graph()
-        # elif epoch % 20 == 0 and epoch != 0:
-        #     with open('results_transfer.txt','a') as results:
-        #         results.write('Switching to flat graph \n')
-        #     criterion.flat_graph()
+        if epoch % 20 == 10:
+            with open('results_transfer.txt','a') as results:
+                results.write('Switching to heirachical graph \n')
+            criterion.heirachy_graph()
+        elif epoch % 20 == 0 and epoch != 0:
+            with open('results_transfer.txt','a') as results:
+                results.write('Switching to flat graph \n')
+            criterion.flat_graph()
 
         with open('results_transfer.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
@@ -124,6 +129,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 
             running_loss = 0.0
             running_corrects = 0
+            running_distance = 0
 
             # Iterate over data.
             for inputs, labels in dataloaders[phase]:
@@ -138,7 +144,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
                 with torch.set_grad_enabled(phase == 'train'):
                     outputs = model(inputs)
                     #_, preds = torch.max(outputs, 1)
-                    loss, preds = criterion(outputs, labels)
+                    loss, preds, distance = criterion(outputs, labels)
                     preds = preds.to(device)
 
                     # backward + optimize only if in training phase
@@ -149,19 +155,25 @@ def train_model(model, criterion, optimizer, num_epochs=25):
                 # statistics
                 running_loss += loss.item() * inputs.size(0)
                 running_corrects += torch.sum(preds == labels.data)
+                running_distance += distance
+
+                print(distance)
+                print(running_corrects)
 
             epoch_loss = running_loss / dataset_sizes[phase]
             epoch_acc = running_corrects.double() / dataset_sizes[phase]
+            epoch_dist = running_distance.double() / dataset_sizes[phase]
 
             if phase == 'test' and epoch_acc > best_acc:
                 best_acc = epoch_acc
                 torch.save(model.state_dict(), './transfer_model.pt')
 
             print('{} Loss: {:.4f} Acc: {:.4f}'.format(
-                phase, epoch_loss, epoch_acc))
+                phase, epoch_loss, epoch_acc, epoch_dist))
 
             with open('results_transfer.txt','a') as results:
-                results.write('{} Loss: {:.4f} Acc: {:.4f} \n'.format(phase, epoch_loss, epoch_acc))
+                results.write('{} Loss: {:.4f} Acc: {:.4f} Dist: {:.4f} \n'.format(
+                    phase, epoch_loss, epoch_acc, epoch_dist))
 
         print()
 
@@ -219,7 +231,7 @@ if __name__ == '__main__':
 
     criterion = Heirachical_Loss()
 
-    criterion.heirachy_graph()
+    criterion.flat_graph()
 
     optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.005)
 
