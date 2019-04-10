@@ -158,7 +158,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 
             epoch_loss = running_loss / dataset_sizes[phase]
             epoch_acc = running_corrects.double() / dataset_sizes[phase]
-            epoch_dist = running_distance.double() / dataset_sizes[phase]
+            epoch_dist = running_distance / dataset_sizes[phase]
 
             if phase == 'test' and epoch_acc > best_acc:
                 best_acc = epoch_acc
