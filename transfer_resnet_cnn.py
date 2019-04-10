@@ -111,8 +111,8 @@ def train_model(model, criterion, optimizer, num_epochs=25):
         #         results.write('Switching to flat graph \n')
         #     criterion.flat_graph()
 
-        # with open('results_transfer.txt','a') as results:
-        #     results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
+        with open('results_transfer.txt','a') as results:
+            results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
         
 
         # Each epoch has a training and validation phase
@@ -177,7 +177,7 @@ if __name__ == '__main__':
 
     # lr = 5e-6 is best for cross entropy
 
-    learning_rate = 5e-6
+    learning_rate = 5e-5
     training_iterations = 200
 
     data_transforms = {
