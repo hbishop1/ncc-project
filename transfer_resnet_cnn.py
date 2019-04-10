@@ -103,7 +103,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 
     best_acc = 0.0
 
-    open('results_transfer.txt','w')
+    open('results_transfer1.txt','w')
 
     for epoch in range(1,num_epochs+1):
         print('Epoch {}/{}'.format(epoch, num_epochs))
@@ -118,7 +118,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
         #         results.write('Switching to flat graph \n')
         #     criterion.flat_graph()
 
-        with open('results_transfer.txt','a') as results:
+        with open('results_transfer1.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
         
 
@@ -225,7 +225,7 @@ if __name__ == '__main__':
     
     model_ft = model_ft.to(device)
 
-    model_ft.load_state_dict(torch.load('./transfer_model_flatgraph.pt',map_location='cpu'))
+    #model_ft.load_state_dict(torch.load('./transfer_model_flatgraph.pt',map_location='cpu'))
 
     criterion = Heirachical_Loss()
 
