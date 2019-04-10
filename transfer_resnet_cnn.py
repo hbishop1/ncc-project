@@ -187,7 +187,7 @@ if __name__ == '__main__':
 
     # lr = 5e-6 is best for cross entropy
 
-    learning_rate = 1e-3
+    learning_rate = 1e-4
     training_iterations = 200
 
     data_transforms = {
@@ -229,7 +229,7 @@ if __name__ == '__main__':
 
     criterion = Heirachical_Loss()
 
-    #criterion.flat_graph()
+    criterion.flat_graph()
 
     optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.005)
 
