@@ -109,14 +109,14 @@ def train_model(model, criterion, optimizer, num_epochs=25):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
 
-        if epoch % 10 == 5:
-            with open('results_transfer.txt','a') as results:
-                results.write('Switching to heirachical graph \n')
-            criterion.heirachy_graph()
-        elif epoch % 10 == 0 and epoch != 0:
-            with open('results_transfer.txt','a') as results:
-                results.write('Switching to flat graph \n')
-            criterion.flat_graph()
+        # if epoch % 10 == 5:
+        #     with open('results_transfer.txt','a') as results:
+        #         results.write('Switching to heirachical graph \n')
+        #     criterion.heirachy_graph()
+        # elif epoch % 10 == 0 and epoch != 0:
+        #     with open('results_transfer.txt','a') as results:
+        #         results.write('Switching to flat graph \n')
+        #     criterion.flat_graph()
 
         with open('results_transfer.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
@@ -229,7 +229,7 @@ if __name__ == '__main__':
 
     criterion = Heirachical_Loss()
 
-    criterion.flat_graph()
+    #criterion.flat_graph()
 
     optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.005)
 
