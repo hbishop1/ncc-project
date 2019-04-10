@@ -61,7 +61,7 @@ class Heirachical_Loss(torch.nn.Module):
                 node = self.G[node]
 
 
-        return loss, torch.LongTensor(preds), torch.Tensor(total_dist)
+        return loss, torch.LongTensor(preds), torch.Tensor([total_dist])
 
     def flat_graph(self):
         graph = {i:81 for i in range(81)}    # cross entropy
@@ -143,7 +143,6 @@ def train_model(model, criterion, optimizer, num_epochs=25):
                 # track history if only in train
                 with torch.set_grad_enabled(phase == 'train'):
                     outputs = model(inputs)
-                    #_, preds = torch.max(outputs, 1)
                     loss, preds, distance = criterion(outputs, labels)
                     preds = preds.to(device)
 
@@ -155,10 +154,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
                 # statistics
                 running_loss += loss.item() * inputs.size(0)
                 running_corrects += torch.sum(preds == labels.data)
-                running_distance += distance
-
-                print(distance)
-                print(running_corrects)
+                running_distance += distance.item()
 
             epoch_loss = running_loss / dataset_sizes[phase]
             epoch_acc = running_corrects.double() / dataset_sizes[phase]
