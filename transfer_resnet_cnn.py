@@ -109,14 +109,14 @@ def train_model(model, criterion, optimizer, num_epochs=25):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
 
-        # if epoch % 10 == 5:
-        #     with open('results_transfer.txt','a') as results:
-        #         results.write('Switching to heirachical graph \n')
-        #     criterion.heirachy_graph()
-        # elif epoch % 10 == 0 and epoch != 0:
-        #     with open('results_transfer.txt','a') as results:
-        #         results.write('Switching to flat graph \n')
-        #     criterion.flat_graph()
+        if epoch % 15 == 5:
+            with open('results_transfer.txt','a') as results:
+                results.write('Switching to heirachical graph \n')
+            criterion.heirachy_graph()
+        elif epoch % 15 == 0 and epoch != 0:
+            with open('results_transfer.txt','a') as results:
+                results.write('Switching to flat graph \n')
+            criterion.flat_graph()
 
         with open('results_transfer1.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
@@ -187,7 +187,7 @@ if __name__ == '__main__':
 
     # lr = 5e-6 is best for cross entropy
 
-    learning_rate = 1e-4
+    learning_rate = 5e-5
     training_iterations = 200
 
     data_transforms = {
@@ -231,7 +231,7 @@ if __name__ == '__main__':
 
     criterion.flat_graph()
 
-    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.1)
+    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.01)
 
     train_model(model_ft, criterion, optimizer_ft, training_iterations)
 
