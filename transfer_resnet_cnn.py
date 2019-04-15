@@ -98,14 +98,14 @@ def imshow(inp):
     plt.show()
 
 
-def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
+def train_model(model, criterion, optimizer, num_epochs=25):
     since = time.time()
     logs = {'train_acc':[],'train_loss':[],'test_acc':[],'test_loss':[],'train_dist':[],'test_dist':[]}
     best_acc = 0.0
 
-    open('results_transfer1.txt','w')
+    open('results_alex_transfer.txt','w')
 
-    for epoch in range(1,num_epochs+1):
+    for epoch in range(num_epochs+1):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
 
@@ -118,7 +118,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
         #         results.write('Switching to heirachical graph \n')
         #     criterion.heirachy_graph()
 
-        with open('results_transfer1.txt','a') as results:
+        with open('results_alex_transfer.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
         
 
@@ -126,7 +126,6 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
         for phase in ['train', 'test']:
             if phase == 'train':
                 model.train()  # Set model to training mode
-                scheduler.step()
             else:
                 model.eval()   # Set model to evaluate mode
 
@@ -150,7 +149,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
                     preds = preds.to(device)
 
                     # backward + optimize only if in training phase
-                    if phase == 'train':
+                    if phase == 'train' and epoch != 0:
                         loss.backward()
                         optimizer.step()
 
@@ -170,7 +169,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
             print('{} Loss: {:.4f} Acc: {:.4f} Dist: {:.4f}'.format(
                 phase, epoch_loss, epoch_acc, epoch_dist))
 
-            with open('results_transfer1.txt','a') as results:
+            with open('results_alex_transfer.txt','a') as results:
                 results.write('{} Loss: {:.4f} Acc: {:.4f} Dist: {:.4f} \n'.format(
                     phase, epoch_loss, epoch_acc, epoch_dist))
 
@@ -178,7 +177,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
             logs[phase + '_loss'].append(epoch_loss)
             logs[phase + '_dist'].append(epoch_dist)
 
-    with open('logs.p', 'wb') as fp:
+    with open('logs_alex_transfer.p', 'wb') as fp:
         pickle.dump(logs, fp)
 
         print()
@@ -195,7 +194,7 @@ if __name__ == '__main__':
 
     # lr = 5e-6 is best for cross entropy
 
-    learning_rate = 5e-5
+    learning_rate = 1e-5
     training_iterations = 200
 
     data_transforms = {
@@ -242,10 +241,8 @@ if __name__ == '__main__':
     criterion.flat_graph()
 
     optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.01)
-    exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer_ft, step_size=5, gamma=0.8)
 
-
-    train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler, training_iterations)
+    train_model(model_ft, criterion, optimizer_ft, training_iterations)
 
 
 
