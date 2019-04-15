@@ -100,7 +100,7 @@ def imshow(inp):
 
 def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
     since = time.time()
-
+    logs = {'train_acc':[],'train_loss':[],'test_acc':[],'test_loss':[],'train_dist':[],'test_dist':[]}
     best_acc = 0.0
 
     open('results_transfer.txt','w')
@@ -174,6 +174,13 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
                 results.write('{} Loss: {:.4f} Acc: {:.4f} Dist: {:.4f} \n'.format(
                     phase, epoch_loss, epoch_acc, epoch_dist))
 
+            logs[phase + '_acc'].append(epoch_acc)
+            logs[phase + '_loss'].append(epoch_loss)
+            logs[phase + '_dist'].append(epoch_dist)
+
+    with open('logs.p', 'wb') as fp:
+        pickle.dump(logs, fp)
+
         print()
 
     time_elapsed = time.time() - since
@@ -188,7 +195,7 @@ if __name__ == '__main__':
 
     # lr = 5e-6 is best for cross entropy
 
-    learning_rate = 5e-4
+    learning_rate = 5e-5
     training_iterations = 200
 
     data_transforms = {
@@ -218,7 +225,9 @@ if __name__ == '__main__':
     dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'test']}
     class_names = image_datasets['train'].classes
 
-    model_ft = models.alexnet(num_classes=81)
+    model_ft = models.alexnet(pretrained=True)
+    model_ft.classifier[-1] = nn.Linear(4096,81)
+
     #num_ftrs = model_ft.fc.in_features
     #model_ft.fc = nn.Linear(num_ftrs,len(class_names))
 
