@@ -217,9 +217,9 @@ if __name__ == '__main__':
     dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'test']}
     class_names = image_datasets['train'].classes
 
-    model_ft = models.alexnet()
-    num_ftrs = model_ft.fc.in_features
-    model_ft.fc = nn.Linear(num_ftrs,len(class_names))
+    model_ft = models.alexnet(num_classes=81)
+    #num_ftrs = model_ft.fc.in_features
+    #model_ft.fc = nn.Linear(num_ftrs,len(class_names))
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     
