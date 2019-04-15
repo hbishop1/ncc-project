@@ -224,8 +224,8 @@ if __name__ == '__main__':
     dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'test']}
     class_names = image_datasets['train'].classes
 
-    model_ft = models.alexnet(pretrained=True)
-    model_ft.classifier[-1] = nn.Linear(4096,81)
+    model_ft = models.alexnet(pretrained=False)
+    #model_ft.classifier[-1] = nn.Linear(4096,81)
 
     #num_ftrs = model_ft.fc.in_features
     #model_ft.fc = nn.Linear(num_ftrs,len(class_names))
@@ -238,7 +238,7 @@ if __name__ == '__main__':
 
     criterion = Heirachical_Loss()
 
-    #criterion.flat_graph()
+    criterion.flat_graph()
 
     optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.01)
 
