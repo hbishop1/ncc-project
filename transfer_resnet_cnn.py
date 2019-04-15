@@ -109,14 +109,14 @@ def train_model(model, criterion, optimizer, num_epochs=25):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
 
-        if epoch % 10 == 9:
-            with open('results_transfer1.txt','a') as results:
-                results.write('Switching to flat graph \n')
-            criterion.flat_graph()
-        elif epoch % 10 == 0 and epoch != 0:
-            with open('results_transfer1.txt','a') as results:
-                results.write('Switching to heirachical graph \n')
-            criterion.heirachy_graph()
+        # if epoch % 10 == 9:
+        #     with open('results_transfer1.txt','a') as results:
+        #         results.write('Switching to flat graph \n')
+        #     criterion.flat_graph()
+        # elif epoch % 10 == 0 and epoch != 0:
+        #     with open('results_transfer1.txt','a') as results:
+        #         results.write('Switching to heirachical graph \n')
+        #     criterion.heirachy_graph()
 
         with open('results_transfer1.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
@@ -217,9 +217,9 @@ if __name__ == '__main__':
     dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'test']}
     class_names = image_datasets['train'].classes
 
-    model_ft = models.resnet18(pretrained=True)
-    num_ftrs = model_ft.fc.in_features
-    model_ft.fc = nn.Linear(num_ftrs,len(class_names))
+    model_ft = models.alexnet()
+    #num_ftrs = model_ft.fc.in_features
+    #model_ft.fc = nn.Linear(num_ftrs,len(class_names))
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     
@@ -229,7 +229,7 @@ if __name__ == '__main__':
 
     criterion = Heirachical_Loss()
 
-    #criterion.flat_graph()
+    criterion.flat_graph()
 
     optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.01)
 
