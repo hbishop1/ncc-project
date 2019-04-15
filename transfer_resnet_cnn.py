@@ -103,7 +103,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
     logs = {'train_acc':[],'train_loss':[],'test_acc':[],'test_loss':[],'train_dist':[],'test_dist':[]}
     best_acc = 0.0
 
-    open('results_alex_transfer.txt','w')
+    open('results_alex.txt','w')
 
     for epoch in range(num_epochs+1):
         print('Epoch {}/{}'.format(epoch, num_epochs))
@@ -118,7 +118,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
         #         results.write('Switching to heirachical graph \n')
         #     criterion.heirachy_graph()
 
-        with open('results_alex_transfer.txt','a') as results:
+        with open('results_alex.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
         
 
@@ -169,7 +169,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
             print('{} Loss: {:.4f} Acc: {:.4f} Dist: {:.4f}'.format(
                 phase, epoch_loss, epoch_acc, epoch_dist))
 
-            with open('results_alex_transfer.txt','a') as results:
+            with open('results_alex.txt','a') as results:
                 results.write('{} Loss: {:.4f} Acc: {:.4f} Dist: {:.4f} \n'.format(
                     phase, epoch_loss, epoch_acc, epoch_dist))
 
@@ -177,7 +177,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
             logs[phase + '_loss'].append(epoch_loss)
             logs[phase + '_dist'].append(epoch_dist)
 
-    with open('logs_alex_transfer.p', 'wb') as fp:
+    with open('logs_alex.p', 'wb') as fp:
         pickle.dump(logs, fp)
 
         print()
@@ -238,7 +238,7 @@ if __name__ == '__main__':
 
     criterion = Heirachical_Loss()
 
-    criterion.flat_graph()
+    #criterion.flat_graph()
 
     optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.01)
 
