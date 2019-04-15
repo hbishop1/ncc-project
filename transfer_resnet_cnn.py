@@ -103,7 +103,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
     logs = {'train_acc':[],'train_loss':[],'test_acc':[],'test_loss':[],'train_dist':[],'test_dist':[]}
     best_acc = 0.0
 
-    open('results_transfer.txt','w')
+    open('results_transfer1.txt','w')
 
     for epoch in range(1,num_epochs+1):
         print('Epoch {}/{}'.format(epoch, num_epochs))
@@ -118,7 +118,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
         #         results.write('Switching to heirachical graph \n')
         #     criterion.heirachy_graph()
 
-        with open('results_transfer.txt','a') as results:
+        with open('results_transfer1.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
         
 
@@ -170,7 +170,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
             print('{} Loss: {:.4f} Acc: {:.4f} Dist: {:.4f}'.format(
                 phase, epoch_loss, epoch_acc, epoch_dist))
 
-            with open('results_transfer.txt','a') as results:
+            with open('results_transfer1.txt','a') as results:
                 results.write('{} Loss: {:.4f} Acc: {:.4f} Dist: {:.4f} \n'.format(
                     phase, epoch_loss, epoch_acc, epoch_dist))
 
