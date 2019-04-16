@@ -225,7 +225,7 @@ if __name__ == '__main__':
     class_names = image_datasets['train'].classes
 
     model_ft = models.alexnet(pretrained=False)
-    #model_ft.classifier[-1] = nn.Linear(4096,81)
+    model_ft.classifier[-1] = nn.Linear(4096,81)
 
     #num_ftrs = model_ft.fc.in_features
     #model_ft.fc = nn.Linear(num_ftrs,len(class_names))
