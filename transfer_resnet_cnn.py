@@ -103,7 +103,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
     logs = {'train_acc':[],'train_loss':[],'test_acc':[],'test_loss':[],'train_dist':[],'test_dist':[]}
     best_acc = 0.0
 
-    open('results_alex.txt','w')
+    open('results_alex_transfer.txt','w')
 
     for epoch in range(num_epochs+1):
         print('Epoch {}/{}'.format(epoch, num_epochs))
@@ -118,7 +118,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
         #         results.write('Switching to heirachical graph \n')
         #     criterion.heirachy_graph()
 
-        with open('results_alex.txt','a') as results:
+        with open('results_alex_transfer.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
         
 
@@ -177,7 +177,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
             logs[phase + '_loss'].append(epoch_loss)
             logs[phase + '_dist'].append(epoch_dist)
 
-    with open('logs_alex.p', 'wb') as fp:
+    with open('logs_alex_transfer.p', 'wb') as fp:
         pickle.dump(logs, fp)
 
         print()
@@ -224,7 +224,7 @@ if __name__ == '__main__':
     dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'test']}
     class_names = image_datasets['train'].classes
 
-    model_ft = models.alexnet(pretrained=False)
+    model_ft = models.alexnet(pretrained=True)
     model_ft.classifier[-1] = nn.Linear(4096,81)
 
     #num_ftrs = model_ft.fc.in_features
