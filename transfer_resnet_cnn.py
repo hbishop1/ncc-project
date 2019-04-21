@@ -98,7 +98,7 @@ def imshow(inp):
     plt.show()
 
 
-def train_model(model, criterion, optimizer, scheduler, num_epochs=25, outfile='results'):
+def train_model(model, criterion, optimizer, num_epochs=25, outfile='results'):
     since = time.time()
     logs = {'train_acc':[],'train_loss':[],'test_acc':[],'test_loss':[],'train_dist':[],'test_dist':[]}
     best_acc = 0.0
@@ -126,7 +126,6 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25, outfile='
         for phase in ['train', 'test']:
             if phase == 'train':
                 model.train()  # Set model to training mode
-                scheduler.step()
             else:
                 model.eval()   # Set model to evaluate mode
 
@@ -195,7 +194,7 @@ if __name__ == '__main__':
 
     # lr = 5e-6 is best for cross entropy
 
-    learning_rate = 1e-3
+    learning_rate = 1e-5
     training_iterations = 200
 
     out = 'results_alex_transfer'
@@ -249,9 +248,7 @@ if __name__ == '__main__':
 
     optimizer = optim.Adam(model.parameters(),lr = learning_rate,weight_decay=0.01)
 
-    exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.8)
-
-    train_model(model, criterion, optimizer, exp_lr_scheduler, training_iterations, out)
+    train_model(model, criterion, optimizer, training_iterations, out)
 
 
 
