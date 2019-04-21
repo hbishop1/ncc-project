@@ -198,7 +198,7 @@ if __name__ == '__main__':
     learning_rate = 1e-3
     training_iterations = 200
 
-    out = 'results_alex_transfer'
+    out = 'results_alex'
 
     data_transforms = {
     'train': transforms.Compose([
