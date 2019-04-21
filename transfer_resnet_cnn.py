@@ -98,27 +98,27 @@ def imshow(inp):
     plt.show()
 
 
-def train_model(model, criterion, optimizer, num_epochs=25):
+def train_model(model, criterion, optimizer, scheduler, num_epochs=25, outfile='results'):
     since = time.time()
     logs = {'train_acc':[],'train_loss':[],'test_acc':[],'test_loss':[],'train_dist':[],'test_dist':[]}
     best_acc = 0.0
 
-    open('results_alex.txt','w')
+    open(outfile + '.txt','w')
 
     for epoch in range(num_epochs+1):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
 
         # if epoch % 10 == 9:
-        #     with open('results_transfer1.txt','a') as results:
+        #     with open(outfile + '.txt','a') as results: as results:
         #         results.write('Switching to flat graph \n')
         #     criterion.flat_graph()
         # elif epoch % 10 == 0 and epoch != 0:
-        #     with open('results_transfer1.txt','a') as results:
+        #     with open(outfile + '.txt','a') as results: as results:
         #         results.write('Switching to heirachical graph \n')
         #     criterion.heirachy_graph()
 
-        with open('results_alex.txt','a') as results:
+        with open(outfile + '.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
         
 
@@ -126,6 +126,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
         for phase in ['train', 'test']:
             if phase == 'train':
                 model.train()  # Set model to training mode
+                scheduler.step()
             else:
                 model.eval()   # Set model to evaluate mode
 
@@ -169,7 +170,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
             print('{} Loss: {:.4f} Acc: {:.4f} Dist: {:.4f}'.format(
                 phase, epoch_loss, epoch_acc, epoch_dist))
 
-            with open('results_alex.txt','a') as results:
+            with open(outfile + '.txt','a') as results:
                 results.write('{} Loss: {:.4f} Acc: {:.4f} Dist: {:.4f} \n'.format(
                     phase, epoch_loss, epoch_acc, epoch_dist))
 
@@ -177,7 +178,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
             logs[phase + '_loss'].append(epoch_loss)
             logs[phase + '_dist'].append(epoch_dist)
 
-    with open('logs_alex.p', 'wb') as fp:
+    with open(outfile + '.p','wb') as fp:
         pickle.dump(logs, fp)
 
         print()
@@ -196,6 +197,8 @@ if __name__ == '__main__':
 
     learning_rate = 1e-4
     training_iterations = 200
+
+    out = 'results_alex_fixed'
 
     data_transforms = {
     'train': transforms.Compose([
@@ -224,25 +227,31 @@ if __name__ == '__main__':
     dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'test']}
     class_names = image_datasets['train'].classes
 
-    model_ft = models.alexnet(pretrained=False)
-    model_ft.classifier[-1] = nn.Linear(4096,81)
+    model = models.alexnet(pretrained=False)
+
+    for param in model.parameters():
+        param.requires_grad = False
+
+    model.classifier[-1] = nn.Linear(4096,81)
 
     #num_ftrs = model_ft.fc.in_features
     #model_ft.fc = nn.Linear(num_ftrs,len(class_names))
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     
-    model_ft = model_ft.to(device)
+    model = model.to(device)
 
-    #model_ft.load_state_dict(torch.load('./transfer_model_flatgraph.pt',map_location='cpu'))
+    #model.load_state_dict(torch.load('./transfer_model_flatgraph.pt',map_location='cpu'))
 
     criterion = Heirachical_Loss()
 
     criterion.flat_graph()
 
-    optimizer_ft = optim.Adam(model_ft.parameters(),lr = learning_rate,weight_decay=0.01)
+    optimizer = optim.Adam(model.parameters(),lr = learning_rate,weight_decay=0.01)
 
-    train_model(model_ft, criterion, optimizer_ft, training_iterations)
+    exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.8)
+
+    train_model(model, criterion, optimizer, exp_lr_scheduler, training_iterations, out)
 
 
 
