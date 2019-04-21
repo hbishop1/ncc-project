@@ -198,7 +198,7 @@ if __name__ == '__main__':
     learning_rate = 1e-3
     training_iterations = 200
 
-    out = 'results_alex'
+    out = 'results_alex_transfer'
 
     data_transforms = {
     'train': transforms.Compose([
@@ -227,7 +227,7 @@ if __name__ == '__main__':
     dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'test']}
     class_names = image_datasets['train'].classes
 
-    model = models.alexnet(pretrained=False,num_classes=81)
+    model = models.alexnet(pretrained=True,num_classes=81)
 
     # for param in model.parameters():
     #     param.requires_grad = False
