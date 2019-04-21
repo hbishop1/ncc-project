@@ -198,7 +198,7 @@ if __name__ == '__main__':
     learning_rate = 1e-5
     training_iterations = 200
 
-    out = 'results_alex_fixed'
+    out = 'results_alex_transfer'
 
     data_transforms = {
     'train': transforms.Compose([
@@ -227,20 +227,20 @@ if __name__ == '__main__':
     dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'test']}
     class_names = image_datasets['train'].classes
 
-    model = models.alexnet(pretrained=True)
+    model = models.alexnet(pretrained=True,num_classes=81)
 
-    for param in model.parameters():
-        param.requires_grad = False
+    # for param in model.parameters():
+    #     param.requires_grad = False
 
-    model.classifier = nn.Sequential(
-            nn.Dropout(),
-            nn.Linear(256 * 6 * 6, 4096),
-            nn.ReLU(inplace=True),
-            nn.Dropout(),
-            nn.Linear(4096, 4096),
-            nn.ReLU(inplace=True),
-            nn.Linear(4096, 81),
-        )
+    # model.classifier = nn.Sequential(
+    #         nn.Dropout(),
+    #         nn.Linear(256 * 6 * 6, 4096),
+    #         nn.ReLU(inplace=True),
+    #         nn.Dropout(),
+    #         nn.Linear(4096, 4096),
+    #         nn.ReLU(inplace=True),
+    #         nn.Linear(4096, 81),
+    #     )
 
     #model.classifier[-1] = nn.Linear(4096,81)
 
