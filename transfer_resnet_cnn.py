@@ -195,7 +195,7 @@ if __name__ == '__main__':
 
     # lr = 5e-6 is best for cross entropy
 
-    learning_rate = 1e-5
+    learning_rate = 1e-3
     training_iterations = 200
 
     out = 'results_alex_transfer'
@@ -227,22 +227,12 @@ if __name__ == '__main__':
     dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'test']}
     class_names = image_datasets['train'].classes
 
-    model = models.alexnet(pretrained=True,num_classes=81)
+    model = models.alexnet(pretrained=False,num_classes=81)
 
     # for param in model.parameters():
     #     param.requires_grad = False
 
-    # model.classifier = nn.Sequential(
-    #         nn.Dropout(),
-    #         nn.Linear(256 * 6 * 6, 4096),
-    #         nn.ReLU(inplace=True),
-    #         nn.Dropout(),
-    #         nn.Linear(4096, 4096),
-    #         nn.ReLU(inplace=True),
-    #         nn.Linear(4096, 81),
-    #     )
-
-    #model.classifier[-1] = nn.Linear(4096,81)
+    model.classifier[-1] = nn.Linear(4096,81)
 
     #num_ftrs = model_ft.fc.in_features
     #model_ft.fc = nn.Linear(num_ftrs,len(class_names))
