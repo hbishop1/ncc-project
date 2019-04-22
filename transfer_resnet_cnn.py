@@ -196,7 +196,7 @@ if __name__ == '__main__':
     learning_rate = 1e-5
     training_iterations = 200
 
-    out = 'results_google_transfer'
+    out = 'results_vgg16_transfer'
 
     data_transforms = {
     'train': transforms.Compose([
@@ -242,7 +242,7 @@ if __name__ == '__main__':
     #         nn.Dropout(),
     #         nn.Linear(4096, 4096),
     #         nn.ReLU(inplace=True),
-    #         nn.Linear(4096, 81),
+    #         nn.Linear(4096, len(class_names)),
     #     )
     
 
@@ -253,12 +253,19 @@ if __name__ == '__main__':
     # num_ftrs = model.fc.in_features
     # model.fc = nn.Linear(num_ftrs,len(class_names))
 
-    # -------- googlenet -------------
+    # -------- vgg16 -------------
 
-    model = models.inception_v3(pretrained=True,transform_input=True,aux_logits=False)
+    model = models.vgg16_bn(pretrained=True)
 
-    num_ftrs = model.fc.in_features
-    model.fc = nn.Linear(num_ftrs,len(class_names))
+    model.classifier = nn.Sequential(
+            nn.Linear(512 * 7 * 7, 4096),
+            nn.ReLU(True),
+            nn.Dropout(),
+            nn.Linear(4096, 4096),
+            nn.ReLU(True),
+            nn.Dropout(),
+            nn.Linear(4096, len(class_names)),
+    )
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     
