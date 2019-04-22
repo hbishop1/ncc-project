@@ -257,15 +257,16 @@ if __name__ == '__main__':
 
     model = models.vgg16_bn(pretrained=True)
 
-    model.classifier = nn.Sequential(
-            nn.Linear(512 * 7 * 7, 4096),
-            nn.ReLU(True),
-            nn.Dropout(),
-            nn.Linear(4096, 4096),
-            nn.ReLU(True),
-            nn.Dropout(),
-            nn.Linear(4096, len(class_names)),
-    )
+    # model.classifier = nn.Sequential(
+    #         nn.Linear(512 * 7 * 7, 4096),
+    #         nn.ReLU(True),
+    #         nn.Dropout(),
+    #         nn.Linear(4096, 4096),
+    #         nn.ReLU(True),
+    #         nn.Dropout(),
+    #         nn.Linear(4096, len(class_names)),
+    # )
+    model.classifier[-1] = nn.Linear(4096, len(class_names))
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     
