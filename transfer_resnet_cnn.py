@@ -197,7 +197,7 @@ if __name__ == '__main__':
     learning_rate = 1e-5
     training_iterations = 200
 
-    out = 'results_resnet_ft'
+    out = 'results_resnet_transfer'
 
     data_transforms = {
     'train': transforms.Compose([
@@ -226,10 +226,7 @@ if __name__ == '__main__':
     dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'test']}
     class_names = image_datasets['train'].classes
 
-    # ------- feature extraction --------
-
-    #for param in model.parameters():
-    #    param.requires_grad = False
+    
 
 
     # ------- alexnet ------------
@@ -250,6 +247,11 @@ if __name__ == '__main__':
     # -------- resnet -------------
 
     model = models.resnet18(pretrained=True)
+
+    # ------- feature extraction --------
+
+    for param in model.parameters():
+        param.requires_grad = False
 
     num_ftrs = model.fc.in_features
     model.fc = nn.Linear(num_ftrs,len(class_names))
