@@ -196,7 +196,7 @@ if __name__ == '__main__':
     learning_rate = 1e-5
     training_iterations = 100
 
-    out = 'results_vgg16_ft_hl'
+    out = 'results_vgg16_transfer_hl'
 
     data_transforms = {
     'train': transforms.Compose([
@@ -248,11 +248,10 @@ if __name__ == '__main__':
 
     model = models.vgg16_bn(pretrained=True)
 
-    model.classifier[-1] = nn.Linear(4096, len(class_names))
-
     for param in model.parameters():
         param.requires_grad = False
 
+    model.classifier[-1] = nn.Linear(4096, len(class_names))
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     
