@@ -196,7 +196,7 @@ if __name__ == '__main__':
     learning_rate = 1e-5
     training_iterations = 200
 
-    out = 'results_vgg16_transfer'
+    out = 'results_vgg16_transfer1'
 
     data_transforms = {
     'train': transforms.Compose([
