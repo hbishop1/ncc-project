@@ -194,9 +194,9 @@ if __name__ == '__main__':
     # lr = 5e-6 is best for cross entropy
 
     learning_rate = 1e-5
-    training_iterations = 200
+    training_iterations = 100
 
-    out = 'results_vgg16_transfer1'
+    out = 'results_vgg16_ft_hl'
 
     data_transforms = {
     'train': transforms.Compose([
@@ -235,16 +235,7 @@ if __name__ == '__main__':
 
     # model = models.alexnet(pretrained=True)
 
-    # model.classifier = nn.Sequential(
-    #         nn.Dropout(),
-    #         nn.Linear(256 * 6 * 6, 4096),
-    #         nn.ReLU(inplace=True),
-    #         nn.Dropout(),
-    #         nn.Linear(4096, 4096),
-    #         nn.ReLU(inplace=True),
-    #         nn.Linear(4096, len(class_names)),
-    #     )
-    
+    # model.classifier[-1] = nn.Linear(4096, len(class_names))
 
     # -------- resnet -------------
 
@@ -257,16 +248,11 @@ if __name__ == '__main__':
 
     model = models.vgg16_bn(pretrained=True)
 
-    # model.classifier = nn.Sequential(
-    #         nn.Linear(512 * 7 * 7, 4096),
-    #         nn.ReLU(True),
-    #         nn.Dropout(),
-    #         nn.Linear(4096, 4096),
-    #         nn.ReLU(True),
-    #         nn.Dropout(),
-    #         nn.Linear(4096, len(class_names)),
-    # )
     model.classifier[-1] = nn.Linear(4096, len(class_names))
+
+    for param in model.parameters():
+        param.requires_grad = False
+
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     
@@ -276,7 +262,7 @@ if __name__ == '__main__':
 
     criterion = Heirachical_Loss()
 
-    criterion.flat_graph()
+    #criterion.flat_graph()
 
     optimizer = optim.Adam(model.parameters(),lr = learning_rate,weight_decay=0.01)
 
