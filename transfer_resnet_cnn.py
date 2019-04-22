@@ -77,7 +77,6 @@ class Heirachical_Loss(torch.nn.Module):
                 total_dist += 1
                 node1, node2 = self.heirachy_G[node1], self.heirachy_G[node2]
 
-
         return loss, torch.LongTensor(preds), torch.tensor(total_dist)
 
     def flat_graph(self):
@@ -226,7 +225,10 @@ if __name__ == '__main__':
     dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'test']}
     class_names = image_datasets['train'].classes
 
-    
+    # ------- feature extraction --------
+
+    # for param in model.parameters():
+    #     param.requires_grad = False
 
 
     # ------- alexnet ------------
@@ -246,12 +248,14 @@ if __name__ == '__main__':
 
     # -------- resnet -------------
 
-    model = models.resnet18(pretrained=True)
+    # model = models.resnet18(pretrained=True)
 
-    # ------- feature extraction --------
+    # num_ftrs = model.fc.in_features
+    # model.fc = nn.Linear(num_ftrs,len(class_names))
 
-    for param in model.parameters():
-        param.requires_grad = False
+    # -------- googlenet -------------
+
+    model = models.inception_v3(pretrained=True)
 
     num_ftrs = model.fc.in_features
     model.fc = nn.Linear(num_ftrs,len(class_names))
