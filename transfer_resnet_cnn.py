@@ -255,7 +255,7 @@ if __name__ == '__main__':
 
     # -------- googlenet -------------
 
-    model = models.inception_v3(pretrained=True)
+    model = models.inception_v3(pretrained=True,transform_input=True)
 
     num_ftrs = model.fc.in_features
     model.fc = nn.Linear(num_ftrs,len(class_names))
