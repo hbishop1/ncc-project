@@ -191,10 +191,10 @@ def train_model(model, criterion, optimizer, num_epochs=25, outfile='results'):
 
 if __name__ == '__main__':
 
-    learning_rate = 1e-6
+    learning_rate = 1e-5
     training_iterations = 200
 
-    out = 'results_lower_lr'
+    out = 'results_hl'
 
     data_transforms = {
     'train': transforms.Compose([
@@ -262,7 +262,7 @@ if __name__ == '__main__':
 
     criterion = Heirachical_Loss()
 
-    criterion.flat_graph()
+    #criterion.flat_graph()
 
     optimizer = optim.Adam(model.parameters(),lr = learning_rate,weight_decay=0.01)
 
