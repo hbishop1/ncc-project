@@ -196,7 +196,7 @@ if __name__ == '__main__':
     learning_rate = 1e-5
     training_iterations = 100
 
-    out = 'results_vgg16_ft_hl'
+    out = 'results_resnet_ft'
 
     data_transforms = {
     'train': transforms.Compose([
@@ -239,16 +239,18 @@ if __name__ == '__main__':
 
     # -------- resnet -------------
 
-    # model = models.resnet18(pretrained=True)
+    model = models.resnet18(pretrained=True)
 
-    # num_ftrs = model.fc.in_features
-    # model.fc = nn.Linear(num_ftrs,len(class_names))
+    num_ftrs = model.fc.in_features
+    model.fc = nn.Linear(num_ftrs,len(class_names))
 
     # -------- vgg16 -------------
 
-    model = models.vgg16_bn(pretrained=True)
+    # model = models.vgg16_bn(pretrained=True)
 
-    model.classifier[-1] = nn.Linear(4096, len(class_names))
+    # model.classifier[-1] = nn.Linear(4096, len(class_names))
+
+    # --------------------------------
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     
@@ -258,7 +260,7 @@ if __name__ == '__main__':
 
     criterion = Heirachical_Loss()
 
-    #criterion.flat_graph()
+    criterion.flat_graph()
 
     optimizer = optim.Adam(model.parameters(),lr = learning_rate,weight_decay=0.01)
 
