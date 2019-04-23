@@ -194,7 +194,7 @@ if __name__ == '__main__':
     learning_rate = 1e-5
     training_iterations = 100
 
-    out = 'test_fe'
+    out = 'test_no_ft'
 
     data_transforms = {
     'train': transforms.Compose([
@@ -232,6 +232,10 @@ if __name__ == '__main__':
     # ------- alexnet ------------
 
     model = models.alexnet(pretrained=True)
+
+    for param in model.parameters():
+        param.requires_grad = False
+
 
     model.classifier[-1] = nn.Linear(4096, len(class_names))
 
