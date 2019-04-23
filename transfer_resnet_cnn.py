@@ -191,12 +191,10 @@ def train_model(model, criterion, optimizer, num_epochs=25, outfile='results'):
 
 if __name__ == '__main__':
 
-    # lr = 5e-6 is best for cross entropy
-
     learning_rate = 1e-5
     training_iterations = 100
 
-    out = 'results_resnet_ft'
+    out = 'test_fe'
 
     data_transforms = {
     'train': transforms.Compose([
@@ -233,16 +231,16 @@ if __name__ == '__main__':
 
     # ------- alexnet ------------
 
-    # model = models.alexnet(pretrained=True)
+    model = models.alexnet(pretrained=True)
 
-    # model.classifier[-1] = nn.Linear(4096, len(class_names))
+    model.classifier[-1] = nn.Linear(4096, len(class_names))
 
     # -------- resnet -------------
 
-    model = models.resnet18(pretrained=True)
+    # model = models.resnet18(pretrained=True)
 
-    num_ftrs = model.fc.in_features
-    model.fc = nn.Linear(num_ftrs,len(class_names))
+    # num_ftrs = model.fc.in_features
+    # model.fc = nn.Linear(num_ftrs,len(class_names))
 
     # -------- vgg16 -------------
 
