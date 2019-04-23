@@ -108,14 +108,14 @@ def train_model(model, criterion, optimizer, num_epochs=25, outfile='results'):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
 
-        # if epoch % 10 == 9:
-        #     with open(outfile + '.txt','a') as results: as results:
-        #         results.write('Switching to flat graph \n')
-        #     criterion.flat_graph()
-        # elif epoch % 10 == 0 and epoch != 0:
-        #     with open(outfile + '.txt','a') as results: as results:
-        #         results.write('Switching to heirachical graph \n')
-        #     criterion.heirachy_graph()
+        if epoch % 10 == 0 and epoch != 0:
+            with open(outfile + '.txt','a') as results: as results:
+                results.write('Switching to flat graph \n')
+            criterion.flat_graph()
+        elif epoch % 10 == 1:
+            with open(outfile + '.txt','a') as results: as results:
+                results.write('Switching to heirachical graph \n')
+            criterion.heirachy_graph()
 
         with open(outfile + '.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
@@ -192,9 +192,9 @@ def train_model(model, criterion, optimizer, num_epochs=25, outfile='results'):
 if __name__ == '__main__':
 
     learning_rate = 1e-5
-    training_iterations = 100
+    training_iterations = 200
 
-    out = 'test_no_ft'
+    out = 'results_alternating'
 
     data_transforms = {
     'train': transforms.Compose([
@@ -231,13 +231,13 @@ if __name__ == '__main__':
 
     # ------- alexnet ------------
 
-    model = models.alexnet(pretrained=True)
+    # model = models.alexnet(pretrained=True)
 
-    for param in model.parameters():
-        param.requires_grad = False
+    # for param in model.parameters():
+    #     param.requires_grad = False
 
 
-    model.classifier[-1] = nn.Linear(4096, len(class_names))
+    # model.classifier[-1] = nn.Linear(4096, len(class_names))
 
     # -------- resnet -------------
 
@@ -248,9 +248,9 @@ if __name__ == '__main__':
 
     # -------- vgg16 -------------
 
-    # model = models.vgg16_bn(pretrained=True)
+    model = models.vgg16_bn(pretrained=True)
 
-    # model.classifier[-1] = nn.Linear(4096, len(class_names))
+    model.classifier[-1] = nn.Linear(4096, len(class_names))
 
     # --------------------------------
 
@@ -262,7 +262,7 @@ if __name__ == '__main__':
 
     criterion = Heirachical_Loss()
 
-    criterion.flat_graph()
+    #criterion.flat_graph()
 
     optimizer = optim.Adam(model.parameters(),lr = learning_rate,weight_decay=0.01)
 
