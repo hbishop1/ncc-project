@@ -66,6 +66,8 @@ class Heirachical_Loss(torch.nn.Module):
             while graph[node] != None:
                 path = [node] + path
                 node = graph[node]
+
+            path = [node] + path
             
             if self.reversed:
                 win = sum([(2 ** (j-len(path)))*probs[path[j]] for j in range(len(path))])
@@ -74,7 +76,7 @@ class Heirachical_Loss(torch.nn.Module):
             else:
                 win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
                 win += 2 ** -len(path) * probs[int(target[i])]
-                loss += torch.log(2*(1-(win))) / len(target)
+                loss += -(torch.log(2*(win-0.5)) / len(target))
 
             pred = inv_graph[None][0]
             while pred in inv_graph.keys():
@@ -111,6 +113,8 @@ def train_model(model, criterion, optimizer, num_epochs=25, outfile='results'):
     since = time.time()
     logs = {'train_acc':[],'train_loss':[],'test_acc':[],'test_loss':[],'train_dist':[],'test_dist':[]}
     best_acc = 0.0
+
+    cross_entropy=nn.CrossEntropyLoss()
 
     open(outfile + '.txt','w')
 
@@ -241,9 +245,9 @@ if __name__ == '__main__':
 
     # ------- alexnet ------------
 
-    # model = models.alexnet(pretrained=True)
+    model = models.alexnet(pretrained=True)
 
-    # model.classifier[-1] = nn.Linear(4096, len(class_names))
+    model.classifier[-1] = nn.Linear(4096, len(class_names))
 
     # -------- resnet -------------
 
@@ -254,9 +258,9 @@ if __name__ == '__main__':
 
     # -------- vgg16 -------------
 
-    model = models.vgg16_bn(pretrained=True)
+    # model = models.vgg16_bn(pretrained=True)
 
-    model.classifier[-1] = nn.Linear(4096, len(class_names))
+    # model.classifier[-1] = nn.Linear(4096, len(class_names))
 
     # --------------------------------
 
@@ -264,7 +268,7 @@ if __name__ == '__main__':
     
     model = model.to(device)
 
-    criterion = Heirachical_Loss(hierachical=False, reversed_weights=False)
+    criterion = Heirachical_Loss(hierachical=True, reversed_weights=False)
 
     optimizer = optim.Adam(model.parameters(),lr = learning_rate,weight_decay=0.01)
 
