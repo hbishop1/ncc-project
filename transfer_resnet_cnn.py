@@ -74,8 +74,7 @@ class Heirachical_Loss(torch.nn.Module):
             else:
                 win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
                 win += 2 ** -len(path) * probs[int(target[i])]
-                print(win)
-                loss += -(torch.log(win) / len(target))
+                loss += -(torch.log(2*(1-(win)) / len(target))
 
             pred = inv_graph[None][0]
             while pred in inv_graph.keys():
@@ -242,9 +241,9 @@ if __name__ == '__main__':
 
     # ------- alexnet ------------
 
-    model = models.alexnet(pretrained=True)
+    # model = models.alexnet(pretrained=True)
 
-    model.classifier[-1] = nn.Linear(4096, len(class_names))
+    # model.classifier[-1] = nn.Linear(4096, len(class_names))
 
     # -------- resnet -------------
 
@@ -255,9 +254,9 @@ if __name__ == '__main__':
 
     # -------- vgg16 -------------
 
-    # model = models.vgg16_bn(pretrained=True)
+    model = models.vgg16_bn(pretrained=True)
 
-    # model.classifier[-1] = nn.Linear(4096, len(class_names))
+    model.classifier[-1] = nn.Linear(4096, len(class_names))
 
     # --------------------------------
 
@@ -265,7 +264,7 @@ if __name__ == '__main__':
     
     model = model.to(device)
 
-    criterion = nn.CrossEntropyLoss()#Heirachical_Loss(hierachical=False, reversed_weights=False)
+    criterion = Heirachical_Loss(hierachical=False, reversed_weights=False)
 
     optimizer = optim.Adam(model.parameters(),lr = learning_rate,weight_decay=0.01)
 
