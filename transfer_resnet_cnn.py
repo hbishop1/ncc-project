@@ -117,8 +117,8 @@ def train_model(model, criterion, optimizer, num_epochs=25, outfile='results'):
         #         results.write('Switching to heirachical graph \n')
         #     criterion.heirachy_graph()
 
-        # with open(outfile + '.txt','a') as results:
-        #     results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
+        with open(outfile + '.txt','a') as results:
+            results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
         
 
         # Each epoch has a training and validation phase
@@ -191,7 +191,7 @@ def train_model(model, criterion, optimizer, num_epochs=25, outfile='results'):
 
 if __name__ == '__main__':
 
-    learning_rate = 1e-5
+    learning_rate = 1e-4
     training_iterations = 200
 
     out = 'results_hl'
