@@ -114,8 +114,6 @@ def train_model(model, criterion, optimizer, num_epochs=25, outfile='results'):
     logs = {'train_acc':[],'train_loss':[],'test_acc':[],'test_loss':[],'train_dist':[],'test_dist':[]}
     best_acc = 0.0
 
-    cross_entropy=nn.CrossEntropyLoss()
-
     open(outfile + '.txt','w')
 
     for epoch in range(num_epochs+1):
