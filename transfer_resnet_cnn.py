@@ -13,16 +13,17 @@ from torchvision import transforms, datasets, models
 
 
 class Heirachical_Loss(torch.nn.Module):
-    def __init__(self):
+
+    def __init__(self, hierachical=True, reversed_weights=False):
         super(Heirachical_Loss,self).__init__()
         with open('heirachy_graph.p', 'rb') as fp:
-            self.heirachy_G = pickle.load(fp)
+            self.hierachy_G = pickle.load(fp)
 
         inv = {}
-        for k, v in self.heirachy_G.items():
+        for k, v in self.hierachy_G.items():
             inv[v] = inv.get(v, [])
             inv[v].append(k)
-        self.inv_heirachy_G = inv
+        self.inv_hierachy_G = inv
 
         graph = {i:81 for i in range(81)}  
         graph[81] = None
@@ -35,7 +36,11 @@ class Heirachical_Loss(torch.nn.Module):
             inv[v].append(k)
         self.inv_flat_G = inv
 
-        self.heirachy = True
+        self.hierachy = hierachical
+
+        self.reversed = reversed_weights
+
+
 
     def forward(self,outputs,target):
 
@@ -44,8 +49,8 @@ class Heirachical_Loss(torch.nn.Module):
         preds = []
         sftmax = F.softmax(outputs,dim=1)
 
-        graph = self.heirachy_G if self.heirachy else self.flat_G
-        inv_graph = self.inv_heirachy_G if self.heirachy else self.inv_flat_G
+        graph = self.hierachy_G if self.hierachy else self.flat_G
+        inv_graph = self.inv_hierachy_G if self.hierachy else self.inv_flat_G
 
         for i in range(len(target)):
             probs = {x:0 for x in graph.keys()}
@@ -59,7 +64,7 @@ class Heirachical_Loss(torch.nn.Module):
             node = int(target[i])
             path = []
             while graph[node] != None:
-                path = [node] + path
+                path = [node] + path if not reversed else path + [node]
                 node = graph[node]
                 
             win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
@@ -75,15 +80,15 @@ class Heirachical_Loss(torch.nn.Module):
             node1, node2 = pred, int(target[i])
             while node1 != node2:
                 total_dist += 1
-                node1, node2 = self.heirachy_G[node1], self.heirachy_G[node2]
+                node1, node2 = self.hierachy_G[node1], self.hierachy_G[node2]
 
         return loss, torch.LongTensor(preds), torch.tensor(total_dist)
 
     def flat_graph(self):
-        self.heirachy = False
+        self.hierachy = False
 
-    def heirachy_graph(self):
-        self.heirachy = True
+    def hierachy_graph(self):
+        self.hierachy = True
 
 
 
@@ -114,8 +119,8 @@ def train_model(model, criterion, optimizer, num_epochs=25, outfile='results'):
         #     criterion.flat_graph()
         # elif epoch % 10 == 1:
         #     with open(outfile + '.txt','a') as results:
-        #         results.write('Switching to heirachical graph \n')
-        #     criterion.heirachy_graph()
+        #         results.write('Switching to hierachical graph \n')
+        #     criterion.hierachy_graph()
 
         with open(outfile + '.txt','a') as results:
             results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
@@ -194,7 +199,7 @@ if __name__ == '__main__':
     learning_rate = 1e-5
     training_iterations = 200
 
-    out = 'results_hl'
+    out = 'results_hl_reversed'
 
     data_transforms = {
     'train': transforms.Compose([
@@ -258,11 +263,7 @@ if __name__ == '__main__':
     
     model = model.to(device)
 
-    #model.load_state_dict(torch.load('./transfer_model_flatgraph.pt',map_location='cpu'))
-
-    criterion = Heirachical_Loss()
-
-    #criterion.flat_graph()
+    criterion = Heirachical_Loss(hierachical=True, reversed_weights=True)
 
     optimizer = optim.Adam(model.parameters(),lr = learning_rate,weight_decay=0.01)
 
