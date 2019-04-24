@@ -199,7 +199,7 @@ if __name__ == '__main__':
     learning_rate = 1e-5
     training_iterations = 200
 
-    out = 'results_hl'
+    out = 'results_hl_reversed'
 
     data_transforms = {
     'train': transforms.Compose([
@@ -263,7 +263,7 @@ if __name__ == '__main__':
     
     model = model.to(device)
 
-    criterion = Heirachical_Loss(hierachical=True, reversed_weights=False)
+    criterion = Heirachical_Loss(hierachical=True, reversed_weights=True)
 
     optimizer = optim.Adam(model.parameters(),lr = learning_rate,weight_decay=0.01)
 
