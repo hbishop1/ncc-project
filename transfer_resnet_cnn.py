@@ -191,10 +191,10 @@ def train_model(model, criterion, optimizer, num_epochs=25, outfile='results'):
 
 if __name__ == '__main__':
 
-    learning_rate = 1e-6
+    learning_rate = 1e-5
     training_iterations = 200
 
-    out = 'results_hl'
+    out = 'results_hl_reversed'
 
     data_transforms = {
     'train': transforms.Compose([
