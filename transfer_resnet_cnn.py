@@ -64,12 +64,18 @@ class Heirachical_Loss(torch.nn.Module):
             node = int(target[i])
             path = []
             while graph[node] != None:
-                path = [node] + path if not self.reversed else path + [node]
+                path = [node] + path
                 node = graph[node]
-                
-            win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
-            win += 2 ** -len(path) * probs[int(target[i])]
-            loss += -(torch.log(win) / len(target))
+            print(probs[node])
+            
+            if self.reversed:
+                win = sum([(2 ** (j-len(path)))*probs[path[j]] for j in range(len(path))])
+                win += 2 ** -len(path) * probs[int(target[i])]
+                loss += -(torch.log(win) / len(target))
+            else:
+                win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
+                win += 2 ** -len(path) * probs[int(target[i])]
+                loss += -(torch.log(win) / len(target))
 
             pred = inv_graph[None][0]
             while pred in inv_graph.keys():
@@ -200,7 +206,7 @@ if __name__ == '__main__':
     learning_rate = 1e-5
     training_iterations = 200
 
-    out = 'test1'
+    out = 'test'
 
     data_transforms = {
     'train': transforms.Compose([
@@ -237,13 +243,9 @@ if __name__ == '__main__':
 
     # ------- alexnet ------------
 
-    # model = models.alexnet(pretrained=True)
+    model = models.alexnet(pretrained=True)
 
-    # for param in model.parameters():
-    #     param.requires_grad = False
-
-
-    # model.classifier[-1] = nn.Linear(4096, len(class_names))
+    model.classifier[-1] = nn.Linear(4096, len(class_names))
 
     # -------- resnet -------------
 
@@ -254,9 +256,9 @@ if __name__ == '__main__':
 
     # -------- vgg16 -------------
 
-    model = models.vgg16_bn(pretrained=True)
+    # model = models.vgg16_bn(pretrained=True)
 
-    model.classifier[-1] = nn.Linear(4096, len(class_names))
+    # model.classifier[-1] = nn.Linear(4096, len(class_names))
 
     # --------------------------------
 
@@ -264,7 +266,7 @@ if __name__ == '__main__':
     
     model = model.to(device)
 
-    criterion = Heirachical_Loss(hierachical=False, reversed_weights=False)
+    criterion = nn.CrossEntropyLoss()# Heirachical_Loss(hierachical=True, reversed_weights=False)
 
     optimizer = optim.Adam(model.parameters(),lr = learning_rate,weight_decay=0.01)
 
