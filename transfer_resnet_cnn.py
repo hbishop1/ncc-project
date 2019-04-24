@@ -74,7 +74,7 @@ class Heirachical_Loss(torch.nn.Module):
             else:
                 win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
                 win += 2 ** -len(path) * probs[int(target[i])]
-                loss += -(torch.log(2*(1-(win))) / len(target))
+                loss += torch.log(2*(1-(win))) / len(target)
 
             pred = inv_graph[None][0]
             while pred in inv_graph.keys():
