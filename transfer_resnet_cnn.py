@@ -243,9 +243,9 @@ if __name__ == '__main__':
 
     # ------- alexnet ------------
 
-    model = models.alexnet(pretrained=True)
+    # model = models.alexnet(pretrained=True)
 
-    model.classifier[-1] = nn.Linear(4096, len(class_names))
+    # model.classifier[-1] = nn.Linear(4096, len(class_names))
 
     # -------- resnet -------------
 
@@ -256,9 +256,9 @@ if __name__ == '__main__':
 
     # -------- vgg16 -------------
 
-    # model = models.vgg16_bn(pretrained=True)
+    model = models.vgg16_bn(pretrained=True)
 
-    # model.classifier[-1] = nn.Linear(4096, len(class_names))
+    model.classifier[-1] = nn.Linear(4096, len(class_names))
 
     # --------------------------------
 
