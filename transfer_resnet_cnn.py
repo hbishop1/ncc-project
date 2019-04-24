@@ -64,7 +64,7 @@ class Heirachical_Loss(torch.nn.Module):
             node = int(target[i])
             path = []
             while graph[node] != None:
-                path = [node] + path if not reversed else path + [node]
+                path = [node] + path if not self.reversed else path + [node]
                 node = graph[node]
                 
             win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
