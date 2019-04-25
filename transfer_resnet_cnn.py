@@ -72,12 +72,12 @@ class Heirachical_Loss(torch.nn.Module):
             if self.reversed:
                 win = sum([(2 ** (j-len(path)))*probs[path[j]] for j in range(len(path))])
                 win += 2 ** -len(path) * probs[int(target[i])]
-                loss += -(torch.log((win-(1/len(path))/(1-2**(len(path))))) / len(target))
+                loss += -(torch.log((win-(2**-len(path)))/(1-2**(-len(path)))) / len(target))
                 
             else:
                 win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
                 win += 2 ** -len(path) * probs[int(target[i])]
-                loss += -(torch.log(2(win-0.5)) / len(target))
+                loss += -(torch.log(2*(win-0.5)) / len(target))
 
 
             pred = inv_graph[None][0]
@@ -159,6 +159,7 @@ def train_model(model, criterion, optimizer, num_epochs=25, outfile='results'):
                 with torch.set_grad_enabled(phase == 'train'):
                     outputs = model(inputs)
                     loss, preds, distance = criterion(outputs, labels)
+
                     preds = preds.to(device)
 
                     # backward + optimize only if in training phase
@@ -268,9 +269,9 @@ if __name__ == '__main__':
     
     model = model.to(device)
 
-    criterion = Heirachical_Loss(hierachical=True, reversed_weights=True)
+    criterion = Heirachical_Loss(hierachical=False, reversed_weights=True)
 
-    optimizer = optim.Adam(model.parameters(),lr = learning_rate)#,weight_decay=0.01)
+    optimizer = optim.Adam(model.parameters(),lr = learning_rate,weight_decay=0.01)
 
     train_model(model, criterion, optimizer, training_iterations, out)
 
