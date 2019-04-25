@@ -76,7 +76,7 @@ class Heirachical_Loss(torch.nn.Module):
             else:
                 win = sum([(2 ** -(j+1))*probs[path[j]] for j in range(len(path))])
                 win += 2 ** -len(path) * probs[int(target[i])]
-                loss += -(torch.log(2*(win-0.5)) / len(target))
+                loss += -(torch.log((win-(1/len(path))/(1-2**(len(path))))) / len(target))
 
             pred = inv_graph[None][0]
             while pred in inv_graph.keys():
@@ -266,7 +266,7 @@ if __name__ == '__main__':
     
     model = model.to(device)
 
-    criterion = Heirachical_Loss(hierachical=True, reversed_weights=False)
+    criterion = Heirachical_Loss(hierachical=True, reversed_weights=True)
 
     optimizer = optim.Adam(model.parameters(),lr = learning_rate,weight_decay=0.01)
 
