@@ -131,8 +131,8 @@ def train_model(model, criterion, optimizer, num_epochs=25, outfile='results'):
         #         results.write('Switching to hierachical graph \n')
         #     criterion.hierachy_graph()
 
-        # with open(outfile + '.txt','a') as results:
-        #     results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
+        with open(outfile + '.txt','a') as results:
+            results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
         
 
         # Each epoch has a training and validation phase
@@ -215,7 +215,7 @@ if __name__ == '__main__':
         transforms.RandomResizedCrop(224),
         transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])_alternating
     ]),
     'test': transforms.Compose([
         transforms.Resize((224,224)),
