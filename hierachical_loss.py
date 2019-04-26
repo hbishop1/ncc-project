@@ -12,7 +12,7 @@ import torchvision
 from torchvision import transforms, datasets, models
 
 
-class Heirachical_Loss(torch.autograd.Function):
+class Heirachical_Loss():
 
     def __init__(self, hierachical=True, reversed_weights=False):
         super(Heirachical_Loss,self).__init__()
@@ -167,7 +167,7 @@ def train_model(model, criterion, optimizer, num_epochs=25, outfile='results'):
                 # track history if only in train
                 with torch.set_grad_enabled(phase == 'train'):
                     outputs = model(inputs)
-                    loss, distance = criterion(outputs, labels)
+                    loss, distance = criterion.forward(outputs, labels)
 
                     _, preds = torch.max(outputs, 1)
 
