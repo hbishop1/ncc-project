@@ -44,10 +44,10 @@ class Heirachical_Loss(torch.nn.Module):
 
     def forward(self,outputs,target):
 
-        loss = 0
         total_dist = 0
         sftmax = F.softmax(outputs,dim=1)
         num_classes = outputs.size()[1]
+        batch_size = outputs.size()[0]
 
         graph = self.hierachy_G if self.hierachy else self.flat_G
         inv_graph = self.inv_hierachy_G if self.hierachy else self.inv_flat_G
@@ -64,7 +64,7 @@ class Heirachical_Loss(torch.nn.Module):
                     children = children + leaf_children(c)
             return children
 
-        for i in range(outputs.size()[0]):
+        for i in range(batch_size):
 
             node = int(target[i])
             path = []
@@ -91,9 +91,11 @@ class Heirachical_Loss(torch.nn.Module):
                 total_dist += 1
                 node1, node2 = self.hierachy_G[node1], self.hierachy_G[node2] 
 
-        epoch_losses = torch.log(torch.mul(gradient_vectors,sftmax))
+        epoch_losses = torch.mul(gradient_vectors,sftmax).view(-1)
 
-        batch_loss = -torch.mean(epoch_losses[torch.isfinite(epoch_losses)])
+        epoch_losses = epoch_losses[epoch_losses.nonzero()]
+
+        batch_loss = torch.div(torch.sum(-torch.log(epoch_losses)),batch_size)
 
 
         return batch_loss, torch.tensor(total_dist)
@@ -122,6 +124,8 @@ def train_model(model, criterion, optimizer, num_epochs=25, outfile='results'):
     best_acc = 0.0
 
     open(outfile + '.txt','w')
+
+    ce = nn.CrossEntropyLoss()
 
     for epoch in range(num_epochs+1):
         print('Epoch {}/{}'.format(epoch, num_epochs))
