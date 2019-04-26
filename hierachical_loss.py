@@ -12,7 +12,7 @@ import torchvision
 from torchvision import transforms, datasets, models
 
 
-class Heirachical_Loss(torch.nn.Module):
+class Heirachical_Loss(torch.autograd.Function):
 
     def __init__(self, hierachical=True, reversed_weights=False):
         super(Heirachical_Loss,self).__init__()
