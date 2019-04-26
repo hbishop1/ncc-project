@@ -52,7 +52,7 @@ class Heirachical_Loss(torch.nn.Module):
         graph = self.hierachy_G if self.hierachy else self.flat_G
         inv_graph = self.inv_hierachy_G if self.hierachy else self.inv_flat_G
 
-        gradient_vectors = torch.zeros(outputs.size())
+        gradient_vectors = torch.zeros(outputs.size()).to(device)
 
 
         def leaf_children(n):
