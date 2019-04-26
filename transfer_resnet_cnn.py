@@ -69,7 +69,7 @@ class Heirachical_Loss(torch.nn.Module):
 
             path = [node] + path
             
-            if self.reversed and self.hierachy:
+            if self.reversed:
                 win = sum([(2 ** (j-len(path)))*probs[path[j]] for j in range(len(path))])
                 win += 2 ** -len(path) * probs[int(target[i])]
                 loss += -(torch.log((win-(2**-len(path)))/(1-2**(-len(path)))) / len(target))
@@ -118,8 +118,6 @@ def train_model(model, criterion, optimizer, num_epochs=25, outfile='results'):
 
     open(outfile + '.txt','w')
 
-    ce = nn.CrossEntropyLoss()
-
     for epoch in range(num_epochs+1):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
@@ -161,8 +159,6 @@ def train_model(model, criterion, optimizer, num_epochs=25, outfile='results'):
                 with torch.set_grad_enabled(phase == 'train'):
                     outputs = model(inputs)
                     loss, preds, distance = criterion(outputs, labels)
-                    print(loss)
-                    print(ce(outputs,labels))
 
                     preds = preds.to(device)
 
@@ -273,7 +269,9 @@ if __name__ == '__main__':
     
     model = model.to(device)
 
-    criterion = Heirachical_Loss(hierachical=False, reversed_weights=True)
+    criterion = Heirachical_Loss(hierachical=True, reversed_weights=True)
+
+    criterion.flat_graph()
 
     optimizer = optim.Adam(model.parameters(),lr = learning_rate,weight_decay=0.01)
 
