@@ -69,7 +69,7 @@ class Heirachical_Loss(torch.nn.Module):
 
             path = [node] + path
             
-            if self.reversed:
+            if self.reversed and self.hierachy:
                 win = sum([(2 ** (j-len(path)))*probs[path[j]] for j in range(len(path))])
                 win += 2 ** -len(path) * probs[int(target[i])]
                 loss += -(torch.log((win-(2**-len(path)))/(1-2**(-len(path)))) / len(target))
@@ -124,17 +124,17 @@ def train_model(model, criterion, optimizer, num_epochs=25, outfile='results'):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
 
-        # if epoch % 10 == 0 and epoch != 0:
-        #     with open(outfile + '.txt','a') as results:
-        #         results.write('Switching to flat graph \n')
-        #     criterion.flat_graph()
-        # elif epoch % 10 == 1:
-        #     with open(outfile + '.txt','a') as results:
-        #         results.write('Switching to hierachical graph \n')
-        #     criterion.hierachy_graph()
+        if epoch % 10 == 0 and epoch != 0:
+            with open(outfile + '.txt','a') as results:
+                results.write('Switching to flat graph \n')
+            criterion.flat_graph()
+        elif epoch % 10 == 1:
+            with open(outfile + '.txt','a') as results:
+                results.write('Switching to hierachical graph \n')
+            criterion.hierachy_graph()
 
-        # with open(outfile + '.txt','a') as results:
-        #     results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
+        with open(outfile + '.txt','a') as results:
+            results.write('Epoch {}/{} \n'.format(epoch,num_epochs))
         
 
         # Each epoch has a training and validation phase
