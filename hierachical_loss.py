@@ -74,14 +74,31 @@ class Heirachical_Loss():
 
             vector = torch.DoubleTensor(np.zeros(num_classes))
 
-            weight = 0.5
-            for n in path:
-                for c in leaf_children(n):
-                    vector[c] += weight
-                weight /= 2
+            l = 2
 
+            if not self.reversed:
 
-            vector[int(target[i])] += 2**(-len(path))
+                for n in path:
+                    for c in leaf_children(n):
+                        vector[c] += 2** - l
+                    l += 1
+
+                vector[int(target[i])] += 2**(-len(path)-1)
+
+                vector *= 2
+
+            else:
+                
+                for n in path:
+                    for c in leaf_children(n):
+                        vector[c] += 2**(l -len(path)-2)
+                    l += 1
+            
+                vector[int(target[i])] += 2**(-len(path)-1)
+
+                vector *= 1/(1-(2**-(len(path)+1)))
+
+            print(vector)
 
             gradient_vectors[i] = vector
 
@@ -216,7 +233,7 @@ if __name__ == '__main__':
     learning_rate = 1e-5
     training_iterations = 200
 
-    out = 'test_ce'
+    out = 'test_hl_reversed'
 
     data_transforms = {
     'train': transforms.Compose([
@@ -253,9 +270,9 @@ if __name__ == '__main__':
 
     # ------- alexnet ------------
 
-    # model = models.alexnet(pretrained=True)
+    model = models.alexnet(pretrained=True)
 
-    # model.classifier[-1] = nn.Linear(4096, len(class_names))
+    model.classifier[-1] = nn.Linear(4096, len(class_names))
 
     # -------- resnet -------------
 
@@ -266,9 +283,9 @@ if __name__ == '__main__':
 
     # -------- vgg16 -------------
 
-    model = models.vgg16_bn(pretrained=True)
+    # model = models.vgg16_bn(pretrained=True)
 
-    model.classifier[-1] = nn.Linear(4096, len(class_names))
+    # model.classifier[-1] = nn.Linear(4096, len(class_names))
 
     # --------------------------------
 
@@ -276,7 +293,7 @@ if __name__ == '__main__':
     
     model = model.to(device)
 
-    criterion = Heirachical_Loss(hierachical=False, reversed_weights=True)
+    criterion = Heirachical_Loss(hierachical=True, reversed_weights=True)
 
     optimizer = optim.Adam(model.parameters(),lr = learning_rate,weight_decay=0.01)
 
