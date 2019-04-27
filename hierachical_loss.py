@@ -233,7 +233,7 @@ if __name__ == '__main__':
     learning_rate = 1e-5
     training_iterations = 200
 
-    out = 'test_hl_reversed_alternating'
+    out = 'test_hl_reversed'
 
     data_transforms = {
     'train': transforms.Compose([
