@@ -144,11 +144,11 @@ def train_model(model, criterion, optimizer, num_epochs=25, outfile='results'):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
 
-        if epoch % 10 == 0 and epoch != 0:
+        if epoch % 20 == 0 and epoch != 0:
             with open(outfile + '.txt','a') as results:
                 results.write('Switching to flat graph \n')
             criterion.flat_graph()
-        elif epoch % 10 == 1:
+        elif epoch % 20 == 1:
             with open(outfile + '.txt','a') as results:
                 results.write('Switching to hierachical graph \n')
             criterion.hierachy_graph()
@@ -225,7 +225,6 @@ def train_model(model, criterion, optimizer, num_epochs=25, outfile='results'):
         time_elapsed // 60, time_elapsed % 60))
     print('Best val Acc: {:4f}'.format(best_acc))
 
-    return model
 
 
 if __name__ == '__main__':
@@ -233,7 +232,7 @@ if __name__ == '__main__':
     learning_rate = 1e-5
     training_iterations = 200
 
-    out = 'test_hl_alternating_reversed'
+    out = 'test_rwhl_alt_20'
 
     data_transforms = {
     'train': transforms.Compose([
