@@ -144,11 +144,11 @@ def train_model(model, criterion, optimizer, num_epochs=25, outfile='results'):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
 
-        if epoch % 5 == 0 and epoch != 0:
+        if epoch % 10 == 0 and epoch != 0:
             with open(outfile + '.txt','a') as results:
                 results.write('Switching to flat graph \n')
             criterion.flat_graph()
-        elif epoch % 5 == 1:
+        elif epoch % 10 == 1:
             with open(outfile + '.txt','a') as results:
                 results.write('Switching to hierachical graph \n')
             criterion.hierachy_graph()
