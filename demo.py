@@ -36,10 +36,10 @@ if __name__ == '__main__':
 
     class_names = image_dataset.classes
 
-     model = models.vgg16_bn(pretrained=True)
+    model = models.vgg16_bn(pretrained=True)
 
     model.classifier[-1] = nn.Linear(4096, len(class_names))
-    
+
     model_ft.fc = nn.Linear(num_ftrs,len(class_names))
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
