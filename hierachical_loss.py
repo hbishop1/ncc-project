@@ -98,8 +98,6 @@ class Heirachical_Loss():
 
                 vector *= 1/(1-(2**-(len(path)+1)))
 
-            print(vector)
-
             gradient_vectors[i] = vector
 
 

@@ -40,15 +40,13 @@ if __name__ == '__main__':
 
     model.classifier[-1] = nn.Linear(4096, len(class_names))
 
-    model_ft.fc = nn.Linear(num_ftrs,len(class_names))
-
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     
-    model_ft = model_ft.to(device)   
+    model = model.to(device)   
 
-    model_ft.load_state_dict(torch.load('./transfer_model.pt',map_location='cpu'))
+    model.load_state_dict(torch.load('./transfer_model.pt',map_location='cpu'))
     
-    model_ft.eval()
+    model.eval()
 
     test_images, test_labels = next(iter(dataloader))
 
