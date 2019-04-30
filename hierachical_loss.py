@@ -144,11 +144,11 @@ def train_model(model, criterion, optimizer, num_epochs=25, outfile='results'):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
 
-        if epoch % 2 == 0 and epoch != 0:
+        if epoch % 100 == 0 and epoch != 0:
             with open(outfile + '.txt','a') as results:
                 results.write('Switching to flat graph \n')
             criterion.flat_graph()
-        elif epoch % 2 == 1:
+        elif epoch % 100 == 1:
             with open(outfile + '.txt','a') as results:
                 results.write('Switching to hierachical graph \n')
             criterion.hierachy_graph()
@@ -232,7 +232,7 @@ if __name__ == '__main__':
     learning_rate = 1e-5
     training_iterations = 200
 
-    out = 'test_rwhl_alt_2'
+    out = 'test_hl_alt_2'
 
     data_transforms = {
     'train': transforms.Compose([
@@ -292,7 +292,7 @@ if __name__ == '__main__':
     
     model = model.to(device)
 
-    criterion = Heirachical_Loss(hierachical=True, reversed_weights=True)
+    criterion = Heirachical_Loss(hierachical=True, reversed_weights=False)
 
     optimizer = optim.Adam(model.parameters(),lr = learning_rate,weight_decay=0.01)
 
